@@ -38,7 +38,7 @@ public class GetReviewsRequestValidator {
 
     private StringBuilder validateProductRatingsParameter(final List<Integer> productRatings) {
         final StringBuilder errorMessages = new StringBuilder();
-        if (productRatings == null || productRatings.isEmpty()) {
+        if (productRatings == null) {
             String errorMessage = String.format("product's rating is required. Allowed 'productRating' values are '%s'.", ALLOWED_PRODUCT_RATING_VALUES);
             errorMessages.append(createErrorMessage(errorMessage));
         }
