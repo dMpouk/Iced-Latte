@@ -27,11 +27,11 @@ public final class OrderItemsCalculator {
     }
 
     @Named("toTotalItems")
-    public static Integer calculate(List<OrderItem> items, Integer defaultValue) {
+    public static Integer calculate(List<OrderItem> items, Integer defaultQuantity) {
         return items.stream()
                 .map(OrderItem::getProductQuantity)
                 .reduce(Integer::sum)
-                .orElse(defaultValue);
+                .orElse(defaultQuantity);
     }
 
     private OrderItemsCalculator() {
