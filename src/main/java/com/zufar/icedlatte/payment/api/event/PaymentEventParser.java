@@ -2,25 +2,30 @@ package com.zufar.icedlatte.payment.api.event;
 
 import com.stripe.model.Event;
 import com.stripe.model.EventDataObjectDeserializer;
-import com.stripe.model.PaymentIntent;
-import com.zufar.icedlatte.payment.exception.PaymentEventParsingException;
+import com.stripe.model.checkout.Session;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 /**
- * This class is responsible for parsing payment event to payment intent object.
- * */
+ * This class is responsible for parsing payment event to session object.
+ */
 
 @Slf4j
 @Service
 public class PaymentEventParser {
 
-    public PaymentIntent parseEventToPaymentIntent(final Event event) {
-        log.info("Parse event to payment intent: start payment event deserialization: event: {}", event);
+    public Session parseEventToSession(final Event event) {
+        log.info("Parse event object {}", event.getType());
         EventDataObjectDeserializer dataObjectDeserializer = event.getDataObjectDeserializer();
-        return dataObjectDeserializer.getObject()
-                .filter(PaymentIntent.class::isInstance)
-                .map(PaymentIntent.class::cast)
-                .orElseThrow(() -> new PaymentEventParsingException(event.getType()));
+        var sessionOptional = dataObjectDeserializer.getObject()
+                .filter(obj -> obj instanceof Session)
+                .map(Session.class::cast);
+        if (sessionOptional.isEmpty()) {
+            log.info("Event {} is not related to session, skipping", event.getType());
+            return null;
+        }
+        return sessionOptional.get();
     }
 }

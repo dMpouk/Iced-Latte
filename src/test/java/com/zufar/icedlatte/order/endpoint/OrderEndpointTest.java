@@ -33,8 +33,8 @@ import static org.hamcrest.Matchers.is;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class OrderEndpointTest {
 
-    private static final String ORDER_ADD_BODY_1 = "/order/model/add-order-body-1.json";
-    private static final String ORDER_ADD_BODY_2 = "/order/model/add-order-body-1.json";
+    private static final String ORDER_CREATE_BODY = "/order/model/create-order-body.json";
+    private static final String ORDER_ADD_BODY_2 = "/order/model/create-order-body.json";
     private static final String ORDER_ADD_BAD_BODY = "/order/model/add-order-bad-body.json";
     private static final String ORDER_RESPONSE_SCHEMA = "order/model/schema/order-response-schema.json";
     private static final String FAILED_ORDER_SCHEMA = "common/model/schema/failed-request-schema.json";
@@ -67,9 +67,9 @@ class OrderEndpointTest {
     }
 
     @Test
-    @DisplayName("Should add order successfully and return object containing status 'CREATED'")
-    void shouldAddOrderSuccessfully() {
-        String body = getRequestBody(ORDER_ADD_BODY_1);
+    @DisplayName("Should create order successfully and return object containing status 'CREATED'")
+    void shouldCreateOrderSuccessfully() {
+        String body = getRequestBody(ORDER_CREATE_BODY);
 
         Response response = given(specification)
                 .body(body)
@@ -101,7 +101,7 @@ class OrderEndpointTest {
                 .contentType(ContentType.JSON)
                 .accept(ContentType.JSON);
 
-        String body = getRequestBody(ORDER_ADD_BODY_1);
+        String body = getRequestBody(ORDER_CREATE_BODY);
         Response responsePost = given(specification)
                 .body(body)
                 .post();
@@ -117,9 +117,9 @@ class OrderEndpointTest {
     void shouldReturnListOfOrders() {
         // Create two orders
         given(specification)
-                .body(getRequestBody(ORDER_ADD_BODY_1))
+                .body(getRequestBody(ORDER_CREATE_BODY))
                 .post();
-        given(specification)
+        given(specification) // FIXME: this should throw exception (attempt to create order for non-existing cart)
                 .body(getRequestBody(ORDER_ADD_BODY_2))
                 .post();
 
@@ -141,11 +141,11 @@ class OrderEndpointTest {
     }
 
     @Test
-    @DisplayName("Should return empty list of orders")
+    @DisplayName("Should return empty list of orders if no order matches the status")
     void shouldReturnEmptyListOfOrders() {
         // Create two orders
         given(specification)
-                .body(getRequestBody(ORDER_ADD_BODY_1))
+                .body(getRequestBody(ORDER_CREATE_BODY))
                 .post();
         given(specification)
                 .body(getRequestBody(ORDER_ADD_BODY_2))
@@ -167,6 +167,6 @@ class OrderEndpointTest {
                 .get();
 
         assertRestApiBadRequestResponse(response, FAILED_ORDER_SCHEMA);
-        response.then().body("message", is("Incorrect status value. Supported status: [CREATED, DELIVERY, FINISHED]"));
+        response.then().body("message", is("Incorrect status value. Supported status: [CREATED, PAID, DELIVERY, FINISHED]"));
     }
 }

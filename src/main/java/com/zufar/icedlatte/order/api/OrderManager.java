@@ -1,6 +1,5 @@
 package com.zufar.icedlatte.order.api;
 
-import com.zufar.icedlatte.openapi.dto.OrderRequestDto;
 import com.zufar.icedlatte.openapi.dto.OrderResponseDto;
 import com.zufar.icedlatte.openapi.dto.OrderStatus;
 import lombok.RequiredArgsConstructor;
@@ -13,12 +12,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class OrderManager {
 
-    private final OrderCreator orderCreator;
     private final OrderProvider orderProvider;
-
-    public OrderResponseDto createNewOrder(final OrderRequestDto orderRequest) {
-        return orderCreator.createNewOrder(orderRequest);
-    }
 
     public List<OrderResponseDto> getOrders(final List<OrderStatus> statusList) {
         return orderProvider.getOrdersByStatus(statusList);

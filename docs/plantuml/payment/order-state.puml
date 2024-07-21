@@ -1,0 +1,15 @@
+@startuml
+
+title Order States
+
+[*] --> CREATED : BE receives checkout request
+CREATED --> PAID : successful payment
+PAID --> DELIVERY : order was sent
+DELIVERY --> FINISHED : order was delivered
+
+CREATED: New Order
+PAID : Stripe redirected success=true
+DELIVERY : Order was accepted by delivery
+FINISHED : Successful delivery
+
+@enduml

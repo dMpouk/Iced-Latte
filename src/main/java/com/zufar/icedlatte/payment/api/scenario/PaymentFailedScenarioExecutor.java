@@ -1,7 +1,7 @@
 package com.zufar.icedlatte.payment.api.scenario;
 
 import com.stripe.model.Event;
-import com.stripe.model.PaymentIntent;
+import com.stripe.model.checkout.Session;
 import com.zufar.icedlatte.payment.repository.PaymentRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -11,7 +11,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.Objects;
 
-import static com.zufar.icedlatte.payment.enums.PaymentStatus.PAYMENT_IS_FAILED;
+import static com.zufar.icedlatte.payment.enums.PaymentSessionStatus.PAYMENT_IS_EXPIRED;
 
 /**
  * This class is responsible for handling the fail scenario and updating
@@ -26,14 +26,14 @@ public class PaymentFailedScenarioExecutor implements PaymentScenarioExecutor {
     private final PaymentRepository paymentRepository;
 
     @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.READ_COMMITTED)
-    public void execute(PaymentIntent paymentIntent) {
-        log.info("Handle payment scenario method: start of handling payment intent: {} by failed scenario.", paymentIntent);
-        paymentRepository.updateStatusAndDescriptionInPayment(paymentIntent.getId(), PAYMENT_IS_FAILED.toString(), PAYMENT_IS_FAILED.getDescription());
-        log.info("Handle payment scenario method: finish of handling payment intent: {} by failed scenario.", paymentIntent);
+    public void execute(Session session) {
+        log.info("Handle payment scenario method: start of handling session: {} by failed scenario.", session.getId());
+        paymentRepository.updateStatusAndDescriptionInPayment(session.getId(), PAYMENT_IS_EXPIRED.toString(), PAYMENT_IS_EXPIRED.getDescription());
+        log.info("Handle payment scenario method: finish of handling session: {} by failed scenario.", session);
     }
 
     @Override
     public boolean supports(Event event) {
-        return Objects.equals(PAYMENT_IS_FAILED.getStatus(), event.getType());
+        return Objects.equals(PAYMENT_IS_EXPIRED.getStatus(), event.getType());
     }
 }

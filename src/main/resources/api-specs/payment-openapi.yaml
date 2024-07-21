@@ -23,21 +23,15 @@ paths:
     post:
       tags:
         - "Payment"
-      summary: "Enables payment processing using a card details token ID"
+      summary: "Creates Stripe Session for an authorized user"
       operationId: "processPayment"
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/CreatePaymentRequest"
       responses:
         "200":
-          description: "Payment processed successfully"
+          description: "Session created successfully"
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ProcessedPaymentWithClientSecretDto"
+                $ref: "#/components/schemas/SessionWithClientSecretDto"
         "400":
           description: "Cannot retrieve stripe customer by stripeCustomerId = {stripeCustomerId}. 
           Cannot retrieve payment method associated with stripe customer, stripeCustomerId = {stripeCustomerId}. 
@@ -173,12 +167,11 @@ components:
         description:
           type: "string"
 
-    ProcessedPaymentWithClientSecretDto:
+    SessionWithClientSecretDto:
       type: "object"
       properties:
-        paymentId:
-          type: "integer"
-          format: "int64"
+        sessionId:
+          type: "string"
         clientSecret:
           type: "string"
 

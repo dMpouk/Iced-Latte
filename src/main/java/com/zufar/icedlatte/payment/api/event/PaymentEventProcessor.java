@@ -1,10 +1,13 @@
 package com.zufar.icedlatte.payment.api.event;
 
 import com.stripe.model.Event;
-import com.stripe.model.PaymentIntent;
+import com.stripe.model.checkout.Session;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.actuate.autoconfigure.web.exchanges.HttpExchangesAutoConfiguration;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 /**
  * This class is responsible for processing payment event to transfer it to the responsibility area
@@ -20,12 +23,11 @@ public class PaymentEventProcessor {
     private final PaymentEventParser paymentEventParser;
     private final PaymentEventHandler paymentEventHandler;
 
-    public void processPaymentEvent(String paymentIntentPayload, String stripeSignatureHeader) {
-        log.info("Process payment event: start payment event processing: input params paymentIntentPayload: {}," +
-                "stripeSignatureHeader: {}.", paymentIntentPayload, stripeSignatureHeader);
-        Event event = paymentEventCreator.createPaymentEvent(paymentIntentPayload, stripeSignatureHeader);
-        PaymentIntent paymentIntent = paymentEventParser.parseEventToPaymentIntent(event);
-        paymentEventHandler.handlePaymentEvent(event, paymentIntent);
+    public void processPaymentEvent(String paymentPayload, String stripeSignatureHeader) {
+        log.info("Process payment event: start payment event processing");
+        Event event = paymentEventCreator.createPaymentEvent(paymentPayload, stripeSignatureHeader);
+        var session = paymentEventParser.parseEventToSession(event);
+        paymentEventHandler.handlePaymentEvent(event, session);
         log.info("Process payment event: event successfully processed");
     }
 

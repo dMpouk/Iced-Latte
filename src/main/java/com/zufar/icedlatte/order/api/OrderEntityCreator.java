@@ -1,58 +1,46 @@
 package com.zufar.icedlatte.order.api;
 
-import com.zufar.icedlatte.openapi.dto.OrderItemRequestDto;
 import com.zufar.icedlatte.openapi.dto.OrderRequestDto;
 import com.zufar.icedlatte.openapi.dto.OrderStatus;
-import com.zufar.icedlatte.order.converter.OrderDtoConverter;
+import com.zufar.icedlatte.openapi.dto.ShoppingCartDto;
 import com.zufar.icedlatte.order.entity.Order;
 import com.zufar.icedlatte.order.entity.OrderItem;
-import com.zufar.icedlatte.product.repository.ProductInfoRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import java.time.OffsetDateTime;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-import java.util.stream.Collectors;
 
-import static com.zufar.icedlatte.order.api.OrderItemsCalculator.calculate;
+import java.math.BigDecimal;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class OrderEntityCreator {
 
-    private static final int DEFAULT_PRODUCTS_QUANTITY = 0;
+    private static final BigDecimal DELIVERY_COST = BigDecimal.ONE; // FIXME: make it dynamic
+    private static final BigDecimal TAX_COST = BigDecimal.ONE; // FIXME: make it dynamic
 
-    private final ProductInfoRepository productInfoRepository;
-    private final OrderDtoConverter orderDtoConverter;
-
-    public Order createNewOrder(OrderRequestDto orderBody, UUID userId) {
-        var order = orderDtoConverter.toOrderEntity(orderBody);
-        var items = createOrderItems(order, orderBody.getItems());
-
-        order.setUserId(userId);
-        order.setItems(items);
-        order.setItemsQuantity(calculate(items, DEFAULT_PRODUCTS_QUANTITY));
-        order.setStatus(OrderStatus.CREATED);
-        order.setCreatedAt(OffsetDateTime.now());
-
-        return order;
-    }
-
-    private List<OrderItem> createOrderItems(Order order, List<OrderItemRequestDto> products) {
-        Map<UUID, Integer> productsWithQuantity = products.stream()
-                .collect(Collectors.toMap(OrderItemRequestDto::getProductId, OrderItemRequestDto::getProductQuantity));
-
-        return productInfoRepository.findAllById(productsWithQuantity.keySet()).stream()
-                .map(productInfo ->
-                        OrderItem.builder()
+    public Order createNewOrder(OrderRequestDto requestDto, ShoppingCartDto cartDto) {
+        var order = Order.builder()
+                .userId(cartDto.getUserId())
+                .itemsQuantity(cartDto.getItemsQuantity())
+                .status(OrderStatus.CREATED)
+                .line(requestDto.getLine())
+                .city(requestDto.getCity())
+                .country(requestDto.getCountry())
+                .postcode(requestDto.getPostCode())
+                .deliveryCost(DELIVERY_COST)
+                .taxCost(TAX_COST)
+                .build();
+        var items = cartDto.getItems().stream().map(
+                        cartItem -> OrderItem.builder()
                                 .order(order)
-                                .productQuantity(productsWithQuantity.get(productInfo.getProductId()))
-                                .productInfo(productInfo)
-                                .build()
-                )
+                                .price(cartItem.getProductInfo().getPrice())
+                                .productName(cartItem.getProductInfo().getName())
+                                .productQuantity(cartItem.getProductQuantity())
+                                .productId(cartItem.getProductInfo().getId())
+                                .build())
                 .toList();
+        order.setItems(items);
+        return order;
     }
 }

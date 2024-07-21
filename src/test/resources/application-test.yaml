@@ -91,7 +91,7 @@ jwt:
   header: Authorization
   secret: 404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970
   expiration: 1800000
-  email: jane@example.com
+  email: jane@example.com # user_id 22222222-2222-2222-2222-222222222222
   password: pass54321
   refresh:
     secret: 404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970
@@ -121,4 +121,5 @@ google:
   redirectUri: "http://localhost:8083"
 
 stripe:
-  secret-key: "sk-test-secret"
+  secret-key: "sk_test_51PJxciHA4AopuQMMeXaJNETc7RUAITeMTKJei07L8iEHrRiWLQalKsr756dnOzmKPUXufkUVNUSaiPyktJG9dGY500x0cM817f"
+  webhook-secret: "sk-test-secret"

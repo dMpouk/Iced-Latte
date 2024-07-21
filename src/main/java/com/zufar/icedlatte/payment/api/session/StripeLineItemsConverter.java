@@ -1,8 +1,8 @@
-package com.zufar.icedlatte.payment.api;
+package com.zufar.icedlatte.payment.api.session;
 
 import com.stripe.param.checkout.SessionCreateParams;
-import com.zufar.icedlatte.openapi.dto.ShoppingCartDto;
-import com.zufar.icedlatte.openapi.dto.ShoppingCartItemDto;
+import com.zufar.icedlatte.order.entity.Order;
+import com.zufar.icedlatte.order.entity.OrderItem;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -16,14 +16,13 @@ import java.util.List;
 @Service
 public class StripeLineItemsConverter {
 
-    // FIXME: use JPA entities instead of converted DTO
-    public List<SessionCreateParams.LineItem> getLineItems(ShoppingCartDto shoppingCart) {
+    public List<SessionCreateParams.LineItem> getLineItems(Order order) {
         var result = new ArrayList<SessionCreateParams.LineItem>();
-        for (ShoppingCartItemDto item : shoppingCart.getItems()) {
+        for (OrderItem item : order.getItems()) {
             var quantity = item.getProductQuantity();
             // convert to cents
-            var unitAmount = item.getProductInfo().getPrice().multiply(BigDecimal.valueOf(100)).longValue();
-            var productName = item.getProductInfo().getName();
+            var unitAmount = item.getPrice().multiply(BigDecimal.valueOf(100)).longValue();
+            var productName = item.getProductName();
             var productData = SessionCreateParams.LineItem.PriceData.ProductData.builder()
                     .setName(productName)
                     .build();

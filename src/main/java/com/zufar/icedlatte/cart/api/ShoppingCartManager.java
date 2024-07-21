@@ -1,5 +1,6 @@
 package com.zufar.icedlatte.cart.api;
 
+import com.zufar.icedlatte.cart.repository.ShoppingCartRepository;
 import com.zufar.icedlatte.openapi.dto.DeleteItemsFromShoppingCartRequest;
 import com.zufar.icedlatte.openapi.dto.NewShoppingCartItemDto;
 import com.zufar.icedlatte.openapi.dto.ShoppingCartDto;
@@ -23,6 +24,7 @@ public class ShoppingCartManager implements CartApi {
     private final ProductQuantityItemUpdater productQuantityItemUpdater;
     private final ShoppingCartProvider shoppingCartProvider;
     private final ShoppingCartItemsDeleter shoppingCartItemsDeleter;
+    private final ShoppingCartRepository shoppingCartRepository;
 
     @Override
     public ShoppingCartDto getShoppingCartByUserId(final UUID userId) throws ShoppingCartNotFoundException {
@@ -45,7 +47,7 @@ public class ShoppingCartManager implements CartApi {
         return productQuantityItemUpdater.update(shoppingCartItemId, productQuantityChange);
     }
 
-    public void deleteByUserId(final UUID userId) {
-        shoppingCartProvider.deleteByUserId(userId);
+    public void deleteById(final UUID cartId) {
+        shoppingCartRepository.deleteById(cartId);
     }
 }

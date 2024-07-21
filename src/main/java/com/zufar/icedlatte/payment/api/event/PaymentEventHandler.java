@@ -2,6 +2,7 @@ package com.zufar.icedlatte.payment.api.event;
 
 import com.stripe.model.Event;
 import com.stripe.model.PaymentIntent;
+import com.stripe.model.checkout.Session;
 import com.zufar.icedlatte.payment.api.scenario.PaymentScenarioExecutor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,15 +23,14 @@ public class PaymentEventHandler {
 
     private final List<PaymentScenarioExecutor> executors;
 
-    public void handlePaymentEvent(Event event, PaymentIntent paymentIntent) {
-        log.debug("Handle payment event method: input parameters: event: {}, paymentIntent: {}.", event, paymentIntent);
-        if (Objects.nonNull(paymentIntent) && Objects.nonNull(event)) {
+    public void handlePaymentEvent(Event event, Session session) {
+        if (Objects.nonNull(session) && Objects.nonNull(event)) {
             log.info("Handle payment event method: start of handling payment event");
 
             executors.stream()
                     .filter(executor -> executor.supports(event))
                     .findFirst()
-                    .ifPresent(executor -> executor.execute(paymentIntent));
+                    .ifPresent(executor -> executor.execute(session));
 
             log.info("Handle payment event method: finish of handling payment event");
         }

@@ -4,6 +4,7 @@ package com.zufar.icedlatte.order.api;
 import com.zufar.icedlatte.openapi.dto.OrderResponseDto;
 import com.zufar.icedlatte.openapi.dto.OrderStatus;
 import com.zufar.icedlatte.order.converter.OrderDtoConverter;
+import com.zufar.icedlatte.order.entity.Order;
 import com.zufar.icedlatte.order.repository.OrderRepository;
 import com.zufar.icedlatte.security.api.SecurityPrincipalProvider;
 import org.junit.jupiter.api.DisplayName;
@@ -16,7 +17,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.List;
 import java.util.UUID;
 
-import static com.zufar.icedlatte.order.stub.OrderDtoTestStub.createOrder;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -41,7 +41,7 @@ class OrderProviderTest {
     @DisplayName("getOrdersByStatus should return the OrderResponseDto")
     void shouldReturnListOfOrders() {
         UUID userId = UUID.randomUUID();
-        var orderEntity = createOrder();
+        var orderEntity = new Order();
         var orders = List.of(orderEntity);
         var orderResponseDto = new OrderResponseDto();
         var responseList = List.of(orderResponseDto);

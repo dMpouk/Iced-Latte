@@ -9,16 +9,12 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  * Configuration stores special keys with which Stripe controls data security.
  *
  * @param secretKey used for security work with the Stripe Api from the backend side.
- * @param publishableKey used for security work with the Stripe Api from the frontend side.
- * @param webHookSecretKey used for security work with the Stripe Api from the webhooks side.
- * @param currency used for provide currency for Stripe Api.
+ * @param webHookSecret used for security work with the Stripe Api from the webhooks side.
  * */
 
 @ConfigurationProperties(prefix = "stripe")
 public record StripeConfiguration(String secretKey,
-                                  String publishableKey,
-                                  String webHookSecretKey,
-                                  String currency) {
+                                  String webHookSecret) {
 
     @PostConstruct
     private void init() {

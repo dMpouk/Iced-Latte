@@ -1,15 +1,17 @@
 package com.zufar.icedlatte.payment.api.intent;
 
-import com.stripe.model.PaymentMethod;
-import com.zufar.icedlatte.openapi.dto.CreatePaymentRequest;
-import com.zufar.icedlatte.openapi.dto.ProcessedPaymentWithClientSecretDto;
-import com.zufar.icedlatte.payment.api.customer.StripeCustomerDataProcessor;
+import com.zufar.icedlatte.openapi.dto.OrderStatus;
+import com.zufar.icedlatte.openapi.dto.SessionWithClientSecretDto;
+import com.zufar.icedlatte.order.api.OrderProvider;
+import com.zufar.icedlatte.payment.api.session.StripeSessionProvider;
 import com.zufar.icedlatte.payment.config.StripeConfiguration;
-import com.zufar.icedlatte.payment.entity.Payment;
+import com.zufar.icedlatte.payment.exception.OrderAlreadyPaidException;
+import com.zufar.icedlatte.security.api.SecurityPrincipalProvider;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.stereotype.Service;
+
 import java.util.UUID;
 
 @Slf4j
@@ -17,27 +19,29 @@ import java.util.UUID;
 @Service
 public class PaymentProcessor {
 
-    private final StripeCustomerDataProcessor stripeCustomerDataProcessor;
     private final StripeConfiguration stripeConfiguration;
+    private final StripeSessionProvider stripeSessionProvider;
+    private final SecurityPrincipalProvider securityPrincipalProvider;
     private final PaymentCreator paymentCreator;
+    private final OrderProvider orderProvider;
 
-    public ProcessedPaymentWithClientSecretDto processPayment(final CreatePaymentRequest paymentRequest) {
-        String cardDetailsTokenId = paymentRequest.getCardTokenId();
-        log.info("Process payment: starting: processing payment with cardDetailsTokenId = {}.", cardDetailsTokenId);
+    public SessionWithClientSecretDto processPayment(final UUID orderId, final HttpServletRequest request) throws OrderAlreadyPaidException {
+        var userId = securityPrincipalProvider.getUserId();
         StripeConfiguration.setStripeKey(stripeConfiguration.secretKey());
+        var order = orderProvider.getOrderEntityById(userId, orderId);
+        if (OrderStatus.PAID == order.getStatus()) {
+            throw new OrderAlreadyPaidException(orderId);
+        }
+        // TODO: should we check if there is already created session?
+        var session = stripeSessionProvider.createSession(order, request);
 
-        Pair<UUID, PaymentMethod> userIdAndPaymentMethodPair = stripeCustomerDataProcessor.processStripeCustomerData(cardDetailsTokenId);
-        Pair<String, Payment> clientSecretAndPaymentPair = paymentCreator.createPayment(userIdAndPaymentMethodPair, paymentRequest.getShippingInfo());
-        String clientSecret = clientSecretAndPaymentPair.getLeft();
-        Payment payment = clientSecretAndPaymentPair.getRight();
+        String sessionId = session.getId();
+        paymentCreator.createPayment(order, session);
 
-        Long paymentId = payment.getPaymentId();
-        log.info("Process payment: finishing: payment was processed with paymentId = {}.", paymentId);
+        SessionWithClientSecretDto sessionDto = new SessionWithClientSecretDto();
+        sessionDto.setSessionId(sessionId);
+        sessionDto.setClientSecret(session.getClientSecret());
 
-        ProcessedPaymentWithClientSecretDto processedPaymentWithClientSecretDto = new ProcessedPaymentWithClientSecretDto();
-        processedPaymentWithClientSecretDto.setPaymentId(paymentId);
-        processedPaymentWithClientSecretDto.setClientSecret(clientSecret);
-
-        return processedPaymentWithClientSecretDto;
+        return sessionDto;
     }
 }

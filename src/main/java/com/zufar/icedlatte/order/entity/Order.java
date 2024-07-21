@@ -17,6 +17,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
@@ -41,14 +42,15 @@ public class Order {
     private UUID userId;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "order_status", nullable = false)
+    @Column(name = "status", nullable = false)
     private OrderStatus status;
 
-    @Column(name = "created_at", nullable = false)
+    @CreationTimestamp
+    @Column(name = "created_at", insertable = false, updatable = false, nullable = false)
     private OffsetDateTime createdAt;
 
     @OneToMany(mappedBy = "order",
-            cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.REMOVE, CascadeType.DETACH},
+            cascade = CascadeType.ALL,
             orphanRemoval = true,
             fetch = FetchType.EAGER)
     private List<OrderItem> items;
@@ -57,40 +59,22 @@ public class Order {
     private Integer itemsQuantity;
 
     @Column(name = "delivery_cost", nullable = false)
-    private BigDecimal deliveryCost;
+    private BigDecimal deliveryCost; // TODO: remove?
 
     @Column(name = "tax_cost", nullable = false)
-    private BigDecimal taxCost;
+    private BigDecimal taxCost; // TODO: remove?
 
-    @Column(name = "delivery_info", nullable = false)
-    private String deliveryInfo;
+    @Column(name = "line", nullable = false)
+    private String line;
 
-    @Column(name = "recipient_name", nullable = false)
-    private String recipientName;
+    @Column(name = "city", nullable = false)
+    private String city;
 
-    @Column(name = "recipient_surname", nullable = false)
-    private String recipientSurname;
+    @Column(name = "country", nullable = false)
+    private String country;
 
-    @Column(name = "email", nullable = false)
-    private String email;
-
-    @Column(name = "phone_number", nullable = false)
-    private String phoneNumber;
-
-    @Override
-    public boolean equals(Object object) {
-        if (this == object)
-            return true;
-        if (object == null || getClass() != object.getClass())
-            return false;
-        var order = (Order) object;
-        return Objects.equals(id, order.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
-    }
+    @Column(name = "postcode", nullable = false)
+    private String postcode;
 
     @Override
     public String toString() {

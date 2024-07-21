@@ -3,6 +3,7 @@ package com.zufar.icedlatte.order.endpoint;
 import com.zufar.icedlatte.openapi.dto.OrderRequestDto;
 import com.zufar.icedlatte.openapi.dto.OrderResponseDto;
 import com.zufar.icedlatte.openapi.dto.OrderStatus;
+import com.zufar.icedlatte.order.api.OrderCreator;
 import com.zufar.icedlatte.order.api.OrderManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,15 +27,15 @@ public class OrderEndpoint implements com.zufar.icedlatte.openapi.order.api.Orde
     public static final String ORDER_URL = "/api/v1/orders";
 
     private final OrderManager orderManager;
+    private final OrderCreator orderCreator;
 
     @Override
     @PostMapping
-    public ResponseEntity<OrderResponseDto> createNewOrder(final OrderRequestDto orderRequest) {
-        log.info("Received orderRequest to add order.");
-        var order = orderManager.createNewOrder(orderRequest);
-        log.info("Order was added with id: {}", order.getId());
-        return ResponseEntity.ok()
-                .body(order);
+    public ResponseEntity<OrderResponseDto> createOrder(final OrderRequestDto orderRequest) {
+        log.info("Received order creation request.");
+        var order = orderCreator.createOrder(orderRequest);
+        log.info("Order creation request processed.");
+        return ResponseEntity.ok().body(order);
     }
 
     @Override
