@@ -19,10 +19,11 @@ public interface OrderRepository extends JpaRepository<Order, UUID> {
     List<Order> findAllByUserIdAndStatus(@Param("userId") UUID userId,
                                          @Param("statusList") List<OrderStatus> statusList);
 
-    Optional<Order> findByUserIdAndId(@Param("userId") UUID userId, @Param("orderId") UUID orderId);
+    Optional<Order> findByUserIdAndId(@Param("userId") UUID userId,
+                                      @Param("orderId") UUID orderId);
 
     @Modifying
-    @Query(value = "UPDATE orders SET status = :order_status WHERE id = :id",
-            nativeQuery = true)
-    void updateOrderStatus(@Param("id") UUID orderId, @Param("order_status") String orderStatus);
+    @Query(value = "UPDATE orders SET status = :order_status WHERE id = :id", nativeQuery = true)
+    void updateOrderStatus(@Param("id") UUID orderId,
+                           @Param("order_status") String orderStatus);
 }

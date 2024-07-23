@@ -41,16 +41,17 @@ public class PaymentEndpoint implements com.zufar.icedlatte.openapi.payment.api.
 
     // TEST CARD: 4242424242424242
     @GetMapping
-    public ResponseEntity<SessionWithClientSecretDto> processPayment(@RequestParam final UUID orderId, HttpServletRequest request) throws OrderAlreadyPaidException {
+    public ResponseEntity<SessionWithClientSecretDto> processPayment(@RequestParam final UUID orderId,
+                                                                     final HttpServletRequest request) throws OrderAlreadyPaidException {
         log.info("Received request to process payment");
-        var session = paymentProcessor.processPayment(orderId, request);
-        log.info("Payment session successfully created");
-        return ResponseEntity.ok().body(session);
+        var paymentSession = paymentProcessor.processPayment(orderId, request);
+        log.info("Payment session was created successfully");
+        return ResponseEntity.ok().body(paymentSession);
     }
 
     @PostMapping("/stripe/webhook")
     public ResponseEntity<Void> processStripeWebhook(@RequestHeader("Stripe-Signature") final String stripeSignatureHeader,
-                                                     @RequestBody String paymentPayload){
+                                                     @RequestBody final String paymentPayload){
         log.info("Received Stripe payment webhook");
         paymentEventProcessor.processPaymentEvent(paymentPayload, stripeSignatureHeader);
         log.info("Finished processing Stripe payment webhook");
@@ -58,7 +59,7 @@ public class PaymentEndpoint implements com.zufar.icedlatte.openapi.payment.api.
     }
 
     @GetMapping("/status")
-    public ResponseEntity<PaymentSessionStatus> getPaymentStatus(@RequestParam String sessionID) throws StripeSessionRetrievalException {
+    public ResponseEntity<PaymentSessionStatus> getPaymentStatus(@RequestParam final String sessionID) throws StripeSessionRetrievalException {
         log.info("Received request to get payment status, session id {}", sessionID);
         var sessionStatus = stripeSessionProvider.retrieveSession(sessionID);
         log.info("Finished processing payment status retrieval");

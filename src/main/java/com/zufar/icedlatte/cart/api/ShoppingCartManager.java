@@ -43,7 +43,7 @@ public class ShoppingCartManager implements CartApi {
 
     @Override
     public ShoppingCartDto updateProductQuantityInShoppingCartItem(final UUID shoppingCartItemId,
-                                                                          final int productQuantityChange) throws ShoppingCartNotFoundException, ShoppingCartItemNotFoundException, InvalidShoppingCartIdException {
+                                                                   final int productQuantityChange) throws ShoppingCartNotFoundException, ShoppingCartItemNotFoundException, InvalidShoppingCartIdException {
         return productQuantityItemUpdater.update(shoppingCartItemId, productQuantityChange);
     }
 

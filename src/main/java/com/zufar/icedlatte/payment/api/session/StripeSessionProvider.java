@@ -23,13 +23,14 @@ import java.util.UUID;
 @Service
 public class StripeSessionProvider {
 
+    private static final String RETURN_URI = "/orders?sessionId={CHECKOUT_SESSION_ID}";
+
     private final SingleUserProvider singleUserProvider;
     private final StripeShippingOptionsProvider stripeShippingOptionsProvider;
     private final StripeLineItemsConverter stripeLineItemsConverter;
-    private final ShoppingCartManager shoppingCartManager;
-    private static final String RETURN_URI = "/orders?sessionId={CHECKOUT_SESSION_ID}";
 
-    public Session createSession(final Order order, HttpServletRequest request) {
+    public Session createSession(final Order order,
+                                 final HttpServletRequest request) {
         var user = singleUserProvider.getUserById(order.getUserId());
         SessionCreateParams params =
                 SessionCreateParams.builder()
@@ -56,7 +57,8 @@ public class StripeSessionProvider {
         var url = UriComponentsBuilder.newInstance()
                 .scheme(request.getScheme())
                 .host(request.getHeader(HttpHeaders.HOST))
-                .path(RETURN_URI).build();
+                .path(RETURN_URI)
+                .build();
         return url.toUriString();
     }
 

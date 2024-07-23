@@ -33,19 +33,19 @@ public class OrderEndpoint implements com.zufar.icedlatte.openapi.order.api.Orde
     @PostMapping
     public ResponseEntity<OrderResponseDto> createOrder(final OrderRequestDto orderRequest) {
         log.info("Received order creation request.");
-        var order = orderCreator.createOrder(orderRequest);
+        var newOrder = orderCreator.createOrder(orderRequest);
         log.info("Order creation request processed.");
-        return ResponseEntity.ok().body(order);
+        return ResponseEntity.ok().body(newOrder);
     }
 
     @Override
     @GetMapping
-    public ResponseEntity<List<OrderResponseDto>> getOrders(final List<OrderStatus> statusList) {
-        var status = statusList == null ? "Not provided" : statusList.stream().map(OrderStatus::toString).collect(Collectors.joining(", "));
-        log.info("Received request to get all orders with status: {}.", status);
-        var lisOfOrders = orderManager.getOrders(statusList);
-        log.info("Orders retrieval processed.");
+    public ResponseEntity<List<OrderResponseDto>> getOrders(final List<OrderStatus> orderStatusList) {
+        var status = orderStatusList == null ? "Not provided" : orderStatusList.stream().map(OrderStatus::toString).collect(Collectors.joining(", "));
+        log.info("Received request to get all orders with status = '{}'", status);
+        var orderList = orderManager.getOrders(orderStatusList);
+        log.info("Orders retrieval processed");
         return ResponseEntity.ok()
-                .body(lisOfOrders);
+                .body(orderList);
     }
 }

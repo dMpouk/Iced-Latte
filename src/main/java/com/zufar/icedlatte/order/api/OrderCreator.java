@@ -3,13 +3,10 @@ package com.zufar.icedlatte.order.api;
 import com.zufar.icedlatte.cart.api.ShoppingCartManager;
 import com.zufar.icedlatte.openapi.dto.OrderRequestDto;
 import com.zufar.icedlatte.openapi.dto.OrderResponseDto;
-import com.zufar.icedlatte.openapi.dto.ShoppingCartDto;
 import com.zufar.icedlatte.order.converter.OrderDtoConverter;
 import com.zufar.icedlatte.order.entity.Order;
 import com.zufar.icedlatte.order.repository.OrderRepository;
 import com.zufar.icedlatte.security.api.SecurityPrincipalProvider;
-import com.zufar.icedlatte.user.api.SingleUserProvider;
-import com.zufar.icedlatte.user.entity.UserEntity;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -33,12 +30,16 @@ public class OrderCreator {
     @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.READ_COMMITTED)
     public OrderResponseDto createOrder(final OrderRequestDto orderRequest) {
         UUID userId = securityPrincipalProvider.getUserId();
-        var cart = shoppingCartManager.getShoppingCartByUserId(userId);
-        var order = orderEntityCreator.createNewOrder(orderRequest, cart);
-        orderRepository.saveAndFlush(order);
-        log.info("New order was created and saved to database.");
-        shoppingCartManager.deleteById(cart.getId());
-        log.info("Deleted shopping cart with id {}", cart.getId());
-        return orderDtoConverter.toResponseDto(order);
+        var shoppingCart = shoppingCartManager.getShoppingCartByUserId(userId);
+        UUID shoppingCartId = shoppingCart.getId();
+
+        var newOrderEntity = orderEntityCreator.createNewOrder(orderRequest, shoppingCart);
+        Order savedOrderEntity = orderRepository.saveAndFlush(newOrderEntity);
+        log.info("New order with id = '{}' was created and saved to database.", savedOrderEntity.getId());
+
+        shoppingCartManager.deleteById(shoppingCartId);
+        log.info("Deleted the shopping cart with id = '{}'", shoppingCartId);
+
+        return orderDtoConverter.toResponseDto(savedOrderEntity);
     }
 }

@@ -6,8 +6,6 @@ import com.zufar.icedlatte.order.converter.OrderDtoConverter;
 import com.zufar.icedlatte.order.entity.Order;
 import com.zufar.icedlatte.order.exception.OrderNotFoundException;
 import com.zufar.icedlatte.order.repository.OrderRepository;
-import com.zufar.icedlatte.review.entity.ProductReview;
-import com.zufar.icedlatte.review.exception.ProductReviewNotFoundException;
 import com.zufar.icedlatte.security.api.SecurityPrincipalProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
