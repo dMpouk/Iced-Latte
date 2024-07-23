@@ -26,10 +26,10 @@ public class PaymentFailedScenarioExecutor implements PaymentScenarioExecutor {
     private final PaymentRepository paymentRepository;
 
     @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.READ_COMMITTED)
-    public void execute(Session session) {
-        log.info("Handle payment scenario method: start of handling session: {} by failed scenario.", session.getId());
-        paymentRepository.updateStatusAndDescriptionInPayment(session.getId(), PAYMENT_IS_EXPIRED.toString(), PAYMENT_IS_EXPIRED.getDescription());
-        log.info("Handle payment scenario method: finish of handling session: {} by failed scenario.", session);
+    public void execute(Session stripeSession) {
+        log.info("Handle payment scenario method: start of handling session: {} by failed scenario.", stripeSession.getId());
+        paymentRepository.updateStatusAndDescriptionInPayment(stripeSession.getId(), PAYMENT_IS_EXPIRED.getStatus(), PAYMENT_IS_EXPIRED.getDescription());
+        log.info("Handle payment scenario method: finish of handling session: {} by failed scenario.", stripeSession);
     }
 
     @Override

@@ -1,6 +1,6 @@
 package com.zufar.icedlatte.payment.api.intent;
 
-import com.zufar.icedlatte.cart.exception.ShoppingCartNotFoundException;
+import com.zufar.icedlatte.order.exception.OrderNotFoundException;
 import com.zufar.icedlatte.order.repository.OrderRepository;
 import com.zufar.icedlatte.payment.converter.PaymentConverter;
 import com.zufar.icedlatte.openapi.dto.ProcessedPaymentDetailsDto;
@@ -18,7 +18,6 @@ import java.util.UUID;
 /**
  * This class is responsible for retrieving relevant payment details from database
  * */
-
 @Slf4j
 @RequiredArgsConstructor
 @Service
@@ -37,7 +36,7 @@ public class PaymentRetriever {
                     UUID orderId = payment.getOrderId();
                     return orderRepository.findById(orderId)
                             .map(order -> paymentConverter.toDto(payment, order.getItems()))
-                            .orElseThrow(() -> new ShoppingCartNotFoundException(orderId));
+                            .orElseThrow(() -> new OrderNotFoundException(orderId));
                 })
                 .orElseThrow(() -> new PaymentNotFoundException(paymentId));
     }
