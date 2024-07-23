@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 /**
  * This class is responsible for payment event (stripe object) creation.
  * */
-
 @Slf4j
 @RequiredArgsConstructor
 @Service
@@ -21,11 +20,12 @@ public class PaymentEventCreator {
     @Value("${stripe.webhook-secret}")
     private String webHookSecret;
 
-    public Event createPaymentEvent(String paymentPayload, String stripeSignatureHeader) {
+    public Event createPaymentEvent(final String paymentPayload,
+                                    final String stripeSignatureHeader) {
         try {
             return Webhook.constructEvent(paymentPayload, stripeSignatureHeader, webHookSecret);
         } catch (SignatureVerificationException ex) {
-            log.error("Error during payment event creating", ex);
+            log.error("Error during Stripe payment event creating", ex);
             throw new PaymentEventProcessingException(stripeSignatureHeader);
         }
     }

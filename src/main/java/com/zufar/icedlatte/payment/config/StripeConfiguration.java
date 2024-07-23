@@ -11,7 +11,6 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  * @param secretKey used for security work with the Stripe Api from the backend side.
  * @param webHookSecret used for security work with the Stripe Api from the webhooks side.
  * */
-
 @ConfigurationProperties(prefix = "stripe")
 public record StripeConfiguration(String secretKey,
                                   String webHookSecret) {

@@ -32,7 +32,7 @@ public class Payment {
     private String sessionId;
 
     @Column(name = "order_id", nullable = false, unique = true)
-    private UUID oderId;
+    private UUID orderId;
 
     @Column(name = "status")
     @Enumerated(value = EnumType.STRING)

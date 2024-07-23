@@ -32,7 +32,7 @@ public class StripeSessionProvider {
     public Session createSession(final Order order,
                                  final HttpServletRequest request) {
         var user = singleUserProvider.getUserById(order.getUserId());
-        SessionCreateParams params =
+        SessionCreateParams stripeSessionCreateParams =
                 SessionCreateParams.builder()
                         .setMode(SessionCreateParams.Mode.PAYMENT)
                         .setUiMode(SessionCreateParams.UiMode.EMBEDDED)
@@ -47,7 +47,7 @@ public class StripeSessionProvider {
                         )
                         .build();
         try {
-            return Session.create(params);
+            return Session.create(stripeSessionCreateParams);
         } catch (StripeException e) {
             throw new StripeSessionCreationException(e.getMessage(), order.getId());
         }

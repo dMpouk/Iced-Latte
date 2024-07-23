@@ -40,7 +40,8 @@ public class OrderProvider {
     }
 
     @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.READ_COMMITTED, readOnly = true)
-    public Order getOrderEntityById(final UUID userId, final UUID orderId) {
+    public Order getOrderEntityById(final UUID userId,
+                                    final UUID orderId) {
         return orderRepository.findByUserIdAndId(userId, orderId)
                 .orElseThrow(() -> {
                     log.warn("Failed to get the order entity with id = '{}'", orderId);

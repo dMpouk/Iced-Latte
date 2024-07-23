@@ -38,7 +38,7 @@ public class PaymentSuccessfulScenarioExecutor implements PaymentScenarioExecuto
         paymentRepository.updateStatusAndDescriptionInPayment(session.getId(), PAYMENT_IS_SUCCEEDED.toString(), PAYMENT_IS_SUCCEEDED.getDescription());
         var paymentEntity = paymentRepository.findBySessionId(session.getId());
         // TODO: update shipping option?
-        orderRepository.updateOrderStatus(paymentEntity.getOderId(), OrderStatus.PAID.toString());
+        orderRepository.updateOrderStatus(paymentEntity.getOrderId(), OrderStatus.PAID.toString());
         paymentEmailConfirmation.send(session);
         log.info("Handle payment scenario method: finish of handling session: {} by successful scenario.", session.getId());
     }

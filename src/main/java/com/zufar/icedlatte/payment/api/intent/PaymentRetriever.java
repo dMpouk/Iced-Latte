@@ -1,7 +1,6 @@
 package com.zufar.icedlatte.payment.api.intent;
 
 import com.zufar.icedlatte.cart.exception.ShoppingCartNotFoundException;
-import com.zufar.icedlatte.cart.repository.ShoppingCartRepository;
 import com.zufar.icedlatte.order.repository.OrderRepository;
 import com.zufar.icedlatte.payment.converter.PaymentConverter;
 import com.zufar.icedlatte.openapi.dto.ProcessedPaymentDetailsDto;
@@ -13,7 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import java.util.Objects;
+
 import java.util.UUID;
 
 /**
@@ -35,7 +34,7 @@ public class PaymentRetriever {
 
         return paymentRepository.findById(paymentId)
                 .map(payment -> {
-                    UUID orderId = payment.getOderId();
+                    UUID orderId = payment.getOrderId();
                     return orderRepository.findById(orderId)
                             .map(order -> paymentConverter.toDto(payment, order.getItems()))
                             .orElseThrow(() -> new ShoppingCartNotFoundException(orderId));

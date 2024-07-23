@@ -31,18 +31,18 @@ public class PaymentProcessor {
 
         var userId = securityPrincipalProvider.getUserId();
         var order = orderProvider.getOrderEntityById(userId, orderId);
+
         if (OrderStatus.PAID == order.getStatus()) {
             throw new OrderAlreadyPaidException(orderId);
         }
-        // TODO: should we check if there is already created strupeSession?
-        var strupeSession = stripeSessionProvider.createSession(order, request);
+        // TODO: should we check if there is already created stripeSession?
+        var stripeSession = stripeSessionProvider.createSession(order, request);
 
-        String sessionId = strupeSession.getId();
-        paymentCreator.createPayment(order, strupeSession);
+        paymentCreator.createPayment(order, stripeSession);
 
         SessionWithClientSecretDto sessionDto = new SessionWithClientSecretDto();
-        sessionDto.setSessionId(sessionId);
-        sessionDto.setClientSecret(strupeSession.getClientSecret());
+        sessionDto.setSessionId(stripeSession.getId());
+        sessionDto.setClientSecret(stripeSession.getClientSecret());
 
         return sessionDto;
     }

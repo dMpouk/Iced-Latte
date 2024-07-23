@@ -43,9 +43,9 @@ public class PaymentEndpoint implements com.zufar.icedlatte.openapi.payment.api.
     @GetMapping
     public ResponseEntity<SessionWithClientSecretDto> processPayment(@RequestParam final UUID orderId,
                                                                      final HttpServletRequest request) throws OrderAlreadyPaidException {
-        log.info("Received request to process payment");
+        log.info("Received request to process payment for the order with id = '{}'", orderId);
         var paymentSession = paymentProcessor.processPayment(orderId, request);
-        log.info("Payment session was created successfully");
+        log.info("Payment session was created successfully for the order with id = '{}'", orderId);
         return ResponseEntity.ok().body(paymentSession);
     }
 

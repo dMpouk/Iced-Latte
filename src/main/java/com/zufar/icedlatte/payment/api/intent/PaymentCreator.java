@@ -23,7 +23,7 @@ public class PaymentCreator {
     public void createPayment(final Order order,
                               final Session session) {
         var payment = Payment.builder()
-                .oderId(order.getId())
+                .orderId(order.getId())
                 .sessionId(session.getId())
                 .status(PaymentSessionStatus.PAYMENT_ACTION_IS_REQUIRED)
                 .build();
