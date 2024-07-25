@@ -48,7 +48,7 @@ public class Order {
     @Column(name = "created_at", insertable = false, updatable = false, nullable = false)
     private OffsetDateTime createdAt;
 
-    @OneToMany(mappedBy = "order",
+    @OneToMany(mappedBy = "orderId",
             cascade = CascadeType.ALL,
             orphanRemoval = true,
             fetch = FetchType.EAGER)
@@ -57,23 +57,11 @@ public class Order {
     @Column(name = "items_quantity", nullable = false)
     private Integer itemsQuantity;
 
-    @Column(name = "delivery_cost", nullable = false)
-    private BigDecimal deliveryCost; // TODO: remove?
+    @Column(name = "items_total_price", nullable = false)
+    private BigDecimal itemsTotalPrice;
 
-    @Column(name = "tax_cost", nullable = false)
-    private BigDecimal taxCost; // TODO: remove?
-
-    @Column(name = "line", nullable = false)
-    private String line;
-
-    @Column(name = "city", nullable = false)
-    private String city;
-
-    @Column(name = "country", nullable = false)
-    private String country;
-
-    @Column(name = "postcode", nullable = false)
-    private String postcode;
+    @Column(name = "address_id", nullable = false)
+    private UUID deliveryAddress;
 
     @Override
     public String toString() {

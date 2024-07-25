@@ -50,4 +50,8 @@ public class ShoppingCartManager implements CartApi {
     public void deleteById(final UUID cartId) {
         shoppingCartRepository.deleteById(cartId);
     }
+
+    public ShoppingCartDto getByUserIdOrThrow(final UUID userId) {
+        return shoppingCartProvider.getByUserIdOrThrow(userId);
+    }
 }

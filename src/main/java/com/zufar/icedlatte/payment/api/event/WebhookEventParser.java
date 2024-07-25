@@ -12,21 +12,18 @@ import java.util.Optional;
  */
 @Slf4j
 @Service
-public class PaymentEventParser {
+public class WebhookEventParser {
 
     public Session parseEventToSession(final Event stripePaymentEvent) {
         log.info("Trying to parse StripePaymentEvent = '{}'", stripePaymentEvent.getType());
 
-        Optional<Session> stripeSession = stripePaymentEvent.getDataObjectDeserializer()
+        return stripePaymentEvent.getDataObjectDeserializer()
                 .getObject()
                 .filter(Session.class::isInstance)
-                .map(Session.class::cast);
-
-        if (stripeSession.isEmpty()) {
-            log.info("Current StripePaymentEvent = '{}' is not related to Stripe session, skipping", stripePaymentEvent.getType());
-            return null;
-        } else {
-            return stripeSession.get();
-        }
+                .map(Session.class::cast)
+                .orElseGet(() -> {
+                    log.info("Current event = '{}' is not related to Stripe session, skipping", stripePaymentEvent.getType());
+                    return null;
+                });
     }
 }

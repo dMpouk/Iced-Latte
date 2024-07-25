@@ -61,7 +61,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/OrderRequestDto"
+              $ref: "#/components/schemas/CreateNewOrderRequestDto"
       responses:
         "200":
           description: "Order placed successfully."
@@ -83,29 +83,16 @@ components:
       description: "Order status: 'CREATED' - new order recently created, 'PAID' - order was paid, 'DELIVERY' - order was sent, 'FINISHED' - order was delivered"
       enum: [ CREATED, PAID, DELIVERY, FINISHED ]
 
-    OrderRequestDto:
+    CreateNewOrderRequestDto:
       type: "object"
       description: "An order structure in the Iced-Latte system"
       required:
-        - line
-        - city
-        - country
-        - postcode
+        - address
         - recipientName
         - recipientSurname
       properties:
-        line:
-          type: "string"
-          description: "Address' line"
-        city:
-          type: "string"
-          description: "Address' city"
-        country:
-          type: "string"
-          description: "Address' country"
-        postCode:
-          type: "string"
-          description: "Address' postcode"
+        address:
+          $ref: "./user-openapi.yaml#/components/schemas/AddressDto"
         recipientName:
           type: "string"
           description: "May be different from the user's name"

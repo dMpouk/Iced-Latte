@@ -1,8 +1,10 @@
 {
-  "line": "The best line 13",
-  "city": "London",
-  "country": "UK",
-  "postCode": "622000",
+  "address": {
+    "line": "The best line 13",
+    "city": "London",
+    "country": "UK",
+    "postcode": "622000"
+  },
   "recipientName": "Jane",
   "recipientSurname": "Doe"
 }

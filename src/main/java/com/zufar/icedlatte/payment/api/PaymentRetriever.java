@@ -1,4 +1,4 @@
-package com.zufar.icedlatte.payment.api.intent;
+package com.zufar.icedlatte.payment.api;
 
 import com.zufar.icedlatte.order.exception.OrderNotFoundException;
 import com.zufar.icedlatte.order.repository.OrderRepository;

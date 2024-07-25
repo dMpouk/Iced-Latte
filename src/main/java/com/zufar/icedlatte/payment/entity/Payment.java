@@ -1,6 +1,6 @@
 package com.zufar.icedlatte.payment.entity;
 
-import com.zufar.icedlatte.payment.enums.PaymentSessionStatus;
+import com.zufar.icedlatte.payment.enums.StripeSessionStatus;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -36,7 +36,7 @@ public class Payment {
 
     @Column(name = "status")
     @Enumerated(value = EnumType.STRING)
-    private PaymentSessionStatus status;
+    private StripeSessionStatus status;
 
     @Column(name = "description")
     private String description;

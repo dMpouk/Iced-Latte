@@ -17,6 +17,7 @@ import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
+import static com.zufar.icedlatte.test.config.RestAssertion.assertRestApiBodySchemaResponse;
 import static com.zufar.icedlatte.test.config.RestUtils.getJwtToken;
 import static com.zufar.icedlatte.test.config.RestUtils.getRequestBody;
 import static io.restassured.RestAssured.given;
@@ -29,6 +30,7 @@ import static org.hamcrest.Matchers.notNullValue;
 class PaymentEndpointTest {
 
     private static final String ORDER_CREATE_BODY = "/order/model/create-order-body.json";
+    private static final String PAYMENT_RESPONSE_SCHEMA = "payment/model/schema/payment-response-schema.json";
 
     protected static RequestSpecification specification;
 
@@ -77,14 +79,14 @@ class PaymentEndpointTest {
 
     @Test
     @DisplayName("Should create payment session successfully and return object containing client secret")
-    void processPayment() {
+    void shouldCreatePaymentSessionSuccessfully() {
         var orderId = createOrder();
         Response paymentResponse = given(specification)
                 .param("orderId", orderId)
                 .get();
 
-        paymentResponse.then().statusCode(HttpStatus.OK.value());
-        paymentResponse.then().body("sessionId", notNullValue());
-        paymentResponse.then().body("clientSecret", notNullValue());
+        assertRestApiBodySchemaResponse(paymentResponse, HttpStatus.OK, PAYMENT_RESPONSE_SCHEMA)
+                .body("sessionId", notNullValue())
+                .body("clientSecret", notNullValue());
     }
 }

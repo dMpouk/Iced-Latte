@@ -13,17 +13,17 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @RequiredArgsConstructor
 @Service
-public class PaymentEventProcessor {
+public class WebhookEventProcessor {
 
-    private final PaymentEventCreator paymentEventCreator;
-    private final PaymentEventParser paymentEventParser;
-    private final PaymentEventHandler paymentEventHandler;
+    private final WebhookEventProvider webhookEventProvider;
+    private final WebhookEventParser webhookEventParser;
+    private final WebhookEventHandler webhookEventHandler;
 
     public void processPaymentEvent(String paymentPayload, String stripeSignatureHeader) {
         log.info("Process Stripe payment event: start Stripe payment event processing");
-        Event stripePaymentEvent = paymentEventCreator.createPaymentEvent(paymentPayload, stripeSignatureHeader);
-        Session stripeSession = paymentEventParser.parseEventToSession(stripePaymentEvent);
-        paymentEventHandler.handlePaymentEvent(stripePaymentEvent, stripeSession);
+        Event stripePaymentEvent = webhookEventProvider.createPaymentEvent(paymentPayload, stripeSignatureHeader);
+        Session stripeSession = webhookEventParser.parseEventToSession(stripePaymentEvent);
+        webhookEventHandler.handlePaymentEvent(stripePaymentEvent, stripeSession);
         log.info("Process Stripe payment event: Stripe event successfully processed");
     }
 

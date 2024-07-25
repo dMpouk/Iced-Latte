@@ -15,7 +15,7 @@ import java.util.List;
 public class PaymentEmailConfirmation extends AbstractEmailSender<EmailConfirmMessage> {
 
 
-    private static final String DEFAULT_SUCCESSFUL_EMAIL_MESSAGE = "Your payment with total amount - %d %s was successfully processed";
+    private static final String DEFAULT_SUCCESSFUL_EMAIL_MESSAGE = "Your payment with total amount - %.1f %s was successfully processed";
 
     private static final String DEFAULT_EMAIL_SUBJECT = "Payment Confirmation for Your Recent Purchase";
 
@@ -29,7 +29,7 @@ public class PaymentEmailConfirmation extends AbstractEmailSender<EmailConfirmMe
     public void send(Session session) {
         sendNotification(
                 session.getCustomerEmail(),
-                DEFAULT_SUCCESSFUL_EMAIL_MESSAGE.formatted(session.getAmountTotal(), session.getCurrency()),
+                DEFAULT_SUCCESSFUL_EMAIL_MESSAGE.formatted(session.getAmountTotal() / 100.0, session.getCurrency()),
                 DEFAULT_EMAIL_SUBJECT
         );
     }

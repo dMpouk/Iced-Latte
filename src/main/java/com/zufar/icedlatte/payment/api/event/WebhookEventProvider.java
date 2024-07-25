@@ -10,12 +10,12 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 /**
- * This class is responsible for payment event (stripe object) creation.
- * */
+ * This class is responsible for payment event (stripe object) retrieval using Stripe API.
+ */
 @Slf4j
 @RequiredArgsConstructor
 @Service
-public class PaymentEventCreator {
+public class WebhookEventProvider {
 
     @Value("${stripe.webhook-secret}")
     private String webHookSecret;

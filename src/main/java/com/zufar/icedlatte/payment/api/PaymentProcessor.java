@@ -1,5 +1,6 @@
-package com.zufar.icedlatte.payment.api.intent;
+package com.zufar.icedlatte.payment.api;
 
+import com.stripe.Stripe;
 import com.zufar.icedlatte.openapi.dto.OrderStatus;
 import com.zufar.icedlatte.openapi.dto.SessionWithClientSecretDto;
 import com.zufar.icedlatte.order.api.OrderProvider;
@@ -7,9 +8,11 @@ import com.zufar.icedlatte.payment.api.session.StripeSessionProvider;
 import com.zufar.icedlatte.payment.config.StripeConfiguration;
 import com.zufar.icedlatte.payment.exception.OrderAlreadyPaidException;
 import com.zufar.icedlatte.security.api.SecurityPrincipalProvider;
+import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
@@ -25,10 +28,16 @@ public class PaymentProcessor {
     private final PaymentCreator paymentCreator;
     private final OrderProvider orderProvider;
 
+    @Value("${stripe.secret-key}")
+    private String stripeSecretKey;
+
+    @PostConstruct
+    private void initStripe() {
+        Stripe.apiKey = stripeSecretKey;
+    }
+
     public SessionWithClientSecretDto processPayment(final UUID orderId,
                                                      final HttpServletRequest request) throws OrderAlreadyPaidException {
-        StripeConfiguration.setStripeKey(stripeConfiguration.secretKey());
-
         var userId = securityPrincipalProvider.getUserId();
         var order = orderProvider.getOrderEntityById(userId, orderId);
 

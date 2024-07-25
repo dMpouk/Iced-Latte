@@ -2,9 +2,9 @@ package com.zufar.icedlatte.payment.endpoint;
 
 import com.zufar.icedlatte.openapi.dto.ProcessedPaymentDetailsDto;
 import com.zufar.icedlatte.openapi.dto.SessionWithClientSecretDto;
-import com.zufar.icedlatte.payment.api.event.PaymentEventProcessor;
-import com.zufar.icedlatte.payment.api.intent.PaymentProcessor;
-import com.zufar.icedlatte.payment.api.intent.PaymentRetriever;
+import com.zufar.icedlatte.payment.api.event.WebhookEventProcessor;
+import com.zufar.icedlatte.payment.api.PaymentProcessor;
+import com.zufar.icedlatte.payment.api.PaymentRetriever;
 import com.zufar.icedlatte.payment.api.session.StripeSessionProvider;
 import com.zufar.icedlatte.payment.dto.PaymentSessionStatus;
 import com.zufar.icedlatte.payment.exception.OrderAlreadyPaidException;
@@ -36,7 +36,7 @@ public class PaymentEndpoint implements com.zufar.icedlatte.openapi.payment.api.
 
     private final PaymentRetriever paymentRetriever;
     private final PaymentProcessor paymentProcessor;
-    private final PaymentEventProcessor paymentEventProcessor;
+    private final WebhookEventProcessor webhookEventProcessor;
     private final StripeSessionProvider stripeSessionProvider;
 
     // TEST CARD: 4242424242424242
@@ -53,7 +53,7 @@ public class PaymentEndpoint implements com.zufar.icedlatte.openapi.payment.api.
     public ResponseEntity<Void> processStripeWebhook(@RequestHeader("Stripe-Signature") final String stripeSignatureHeader,
                                                      @RequestBody final String paymentPayload){
         log.info("Received Stripe payment webhook");
-        paymentEventProcessor.processPaymentEvent(paymentPayload, stripeSignatureHeader);
+        webhookEventProcessor.processPaymentEvent(paymentPayload, stripeSignatureHeader);
         log.info("Finished processing Stripe payment webhook");
         return new ResponseEntity<>(HttpStatus.OK);
     }

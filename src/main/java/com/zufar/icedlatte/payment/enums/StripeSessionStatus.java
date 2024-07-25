@@ -3,17 +3,21 @@ package com.zufar.icedlatte.payment.enums;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
+/**
+ * Stripe Webhook sends <a href="https://docs.stripe.com/api/events/types">various events</a>,
+ * So far we're interested only in "checkout.session.expired" and "checkout.session.completed"
+ */
 @Getter
 @RequiredArgsConstructor
-public enum PaymentSessionStatus {
+public enum StripeSessionStatus {
 
     PAYMENT_ACTION_IS_REQUIRED("no payment attempt",
             "Payment action is required."),
 
-    PAYMENT_IS_EXPIRED("checkout.session.expired",
+    SESSION_IS_EXPIRED("checkout.session.expired",
             "Checkout Session is expired."),
 
-    PAYMENT_IS_SUCCEEDED("checkout.session.completed",
+    SESSION_IS_SUCCEEDED("checkout.session.completed",
             "Payment has succeeded.");
 
     private final String status;
