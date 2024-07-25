@@ -31,7 +31,6 @@ import java.util.UUID;
 @RequestMapping(PaymentEndpoint.PAYMENT_URL)
 public class PaymentEndpoint implements com.zufar.icedlatte.openapi.payment.api.PaymentApi {
 
-    // stripe listen --forward-to localhost:80/backend/api/v1/payment/stripe/webhook
     public static final String PAYMENT_URL = "/api/v1/payment";
 
     private final PaymentRetriever paymentRetriever;
@@ -39,7 +38,6 @@ public class PaymentEndpoint implements com.zufar.icedlatte.openapi.payment.api.
     private final WebhookEventProcessor webhookEventProcessor;
     private final StripeSessionProvider stripeSessionProvider;
 
-    // TEST CARD: 4242424242424242
     @GetMapping
     public ResponseEntity<SessionWithClientSecretDto> processPayment(@RequestParam final UUID orderId,
                                                                      final HttpServletRequest request) throws OrderAlreadyPaidException {

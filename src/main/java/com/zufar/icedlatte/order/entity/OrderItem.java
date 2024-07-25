@@ -39,13 +39,13 @@ public class OrderItem {
     private UUID productId;
 
     @Column(name = "product_price")
-    private BigDecimal price;
+    private BigDecimal productPrice;
 
     @Column(name = "product_name")
     private String productName;
 
     @Column(name = "products_quantity", nullable = false)
-    private Integer productQuantity;
+    private Integer productsQuantity;
 
     @Override
     public String toString() {

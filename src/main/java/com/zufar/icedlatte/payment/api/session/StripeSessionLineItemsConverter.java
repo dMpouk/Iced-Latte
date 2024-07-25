@@ -24,7 +24,7 @@ public class StripeSessionLineItemsConverter {
     }
 
     private SessionCreateParams.LineItem convertToLineItem(OrderItem orderItem) {
-        var unitAmount = orderItem.getPrice().multiply(BigDecimal.valueOf(100)).longValue();
+        var unitAmount = orderItem.getProductPrice().multiply(BigDecimal.valueOf(100)).longValue();
 
         var productData = SessionCreateParams.LineItem.PriceData.ProductData.builder()
                 .setName(orderItem.getProductName())
@@ -37,7 +37,7 @@ public class StripeSessionLineItemsConverter {
                 .build();
 
         return SessionCreateParams.LineItem.builder()
-                .setQuantity((long) orderItem.getProductQuantity())
+                .setQuantity((long) orderItem.getProductsQuantity())
                 .setPriceData(priceData)
                 .build();
     }
