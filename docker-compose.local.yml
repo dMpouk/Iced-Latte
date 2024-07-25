@@ -15,9 +15,9 @@ services:
   iced-latte-frontend:
     image: 'zufarexplainedit/iced-latte-frontend:latest'
     container_name: iced-latte-frontend
-    build:
-      context: /Users/astriganova/Desktop/Projects/Iced-Latte-Frontend
-      dockerfile: Dockerfile.local
+#    build:
+#      context: /Users/astriganova/Desktop/Projects/Iced-Latte-Frontend
+#      dockerfile: Dockerfile.local
     restart: 'always'
     ports:
       - '3000:3000'
