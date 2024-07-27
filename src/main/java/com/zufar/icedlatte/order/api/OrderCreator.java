@@ -40,7 +40,7 @@ public class OrderCreator {
         UUID shoppingCartId = shoppingCart.getId();
 
         var addressId = addressProvider.addNewAddress(orderRequest.getAddress());
-        var newOrderEntity = orderDtoConverter.toOrder(shoppingCart, addressId);;
+        var newOrderEntity = orderDtoConverter.toOrder(shoppingCart, addressId);
         Order savedOrderEntity = orderRepository.saveAndFlush(newOrderEntity);
         // FIXME: code smell
         savedOrderEntity.setItems(shoppingCart.getItems().stream()

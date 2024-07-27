@@ -22,7 +22,7 @@ public class WebhookEventParser {
                 .filter(Session.class::isInstance)
                 .map(Session.class::cast)
                 .orElseGet(() -> {
-                    log.info("Current event = '{}' is not related to Stripe session, skipping", stripePaymentEvent.getType());
+                    log.info("Event = '{}' is not related to Stripe session, skipping", stripePaymentEvent.getType());
                     return null;
                 });
     }

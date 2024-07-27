@@ -17,9 +17,13 @@ public enum StripeSessionStatus {
     SESSION_IS_EXPIRED("checkout.session.expired",
             "Checkout Session is expired."),
 
-    SESSION_IS_SUCCEEDED("checkout.session.completed",
+    SESSION_IS_COMPLETED("checkout.session.completed",
             "Payment has succeeded.");
 
+    public static class Constants {
+        public static final String SESSION_IS_EXPIRED = "checkout.session.expired";
+        public static final String SESSION_IS_COMPLETED = "checkout.session.completed";
+    }
     private final String status;
     private final String description;
 }

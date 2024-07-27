@@ -50,8 +50,7 @@ public class Order {
 
     @OneToMany(mappedBy = "orderId",
             cascade = CascadeType.ALL,
-            orphanRemoval = true,
-            fetch = FetchType.EAGER)
+            orphanRemoval = true)
     private List<OrderItem> items;
 
     @Column(name = "items_quantity", nullable = false)

@@ -6,7 +6,7 @@ CREATE TABLE IF NOT EXISTS payment
     status      VARCHAR(32),
     description TEXT,
 
-    CONSTRAINT fk_user
+    CONSTRAINT fk_order
         FOREIGN KEY (order_id)
             REFERENCES orders (id)
             ON DELETE CASCADE

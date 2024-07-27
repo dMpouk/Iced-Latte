@@ -23,6 +23,6 @@ public interface OrderDtoConverter {
     @Mapping(target = "status", constant = "CREATED")
     @Mapping(target = "deliveryAddress", source = "addressId")
     @Mapping(target = "items", ignore = true)
-    // @Mapping(target = "items", source = "cartDto.items", qualifiedByName = {"toOrderItemDto"})
+//    @Mapping(target = "items", source = "cartDto.items", qualifiedByName = {"toOrderItemDto"})
     Order toOrder(final ShoppingCartDto cartDto, final UUID addressId);
 }

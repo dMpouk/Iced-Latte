@@ -11,11 +11,11 @@ import org.springframework.stereotype.Repository;
 public interface PaymentRepository extends CrudRepository<Payment, String> {
 
     @Modifying
-    @Query(value = "UPDATE payment SET status = :payment_status, description = :payment_description WHERE session_id = :session_id",
+    @Query(value = "UPDATE payment SET status = :status, description = :description WHERE session_id = :session_id",
             nativeQuery = true)
     void updateStatusAndDescriptionInPayment(@Param("session_id") String sessionId,
-                                             @Param("payment_status") String paymentStatus,
-                                             @Param("payment_description") String paymentDescription);
+                                             @Param("status") String status,
+                                             @Param("description") String description);
 
     Payment findBySessionId(String id);
 }

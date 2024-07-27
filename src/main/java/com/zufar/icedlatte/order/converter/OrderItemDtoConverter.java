@@ -16,7 +16,7 @@ public interface OrderItemDtoConverter {
     @Mapping(target = "productId", source = "productInfo.id")
     @Mapping(target = "productName", source = "productInfo.name")
     @Mapping(target = "productPrice", source = "productInfo.price")
-    @Mapping(target = "productsQuantity", source = "productInfo.quantity")
+    @Mapping(target = "productsQuantity", source = "productQuantity")
     @Named("toOrderItemDto")
     OrderItem toOrderItem(ShoppingCartItemDto cartItem);
 }
