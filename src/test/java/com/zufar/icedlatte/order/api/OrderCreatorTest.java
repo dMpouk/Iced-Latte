@@ -7,7 +7,6 @@ import com.zufar.icedlatte.order.converter.OrderDtoConverter;
 import com.zufar.icedlatte.order.entity.Order;
 import com.zufar.icedlatte.order.repository.OrderRepository;
 import com.zufar.icedlatte.security.api.SecurityPrincipalProvider;
-import com.zufar.icedlatte.user.api.AddressProvider;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -40,10 +39,6 @@ class OrderCreatorTest {
 
     @Mock
     private  ShoppingCartProvider shoppingCartProvider;
-
-
-    @Mock
-    private AddressProvider addressProvider;
 
     @Test
     @DisplayName("Create order should return the OrderResponseDto")

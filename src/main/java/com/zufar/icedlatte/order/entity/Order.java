@@ -1,17 +1,8 @@
 package com.zufar.icedlatte.order.entity;
 
 import com.zufar.icedlatte.openapi.dto.OrderStatus;
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import com.zufar.icedlatte.user.entity.Address;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -37,7 +28,7 @@ public class Order {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @Column(name = "user_id", nullable = false)
+    @Column(name = "user_id", updatable = false, nullable = false)
     private UUID userId;
 
     @Enumerated(EnumType.STRING)
@@ -48,19 +39,18 @@ public class Order {
     @Column(name = "created_at", insertable = false, updatable = false, nullable = false)
     private OffsetDateTime createdAt;
 
-    @OneToMany(mappedBy = "orderId",
-            cascade = CascadeType.ALL,
-            orphanRemoval = true)
+    @OneToMany(mappedBy = "orderId", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderItem> items;
+
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "address_id", referencedColumnName = "id", nullable = false, insertable = false, updatable = false)
+    private Address deliveryAddress;
 
     @Column(name = "items_quantity", nullable = false)
     private Integer itemsQuantity;
 
     @Column(name = "items_total_price", nullable = false)
     private BigDecimal itemsTotalPrice;
-
-    @Column(name = "address_id", nullable = false)
-    private UUID deliveryAddress;
 
     @Override
     public String toString() {

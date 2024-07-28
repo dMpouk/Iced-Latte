@@ -1,6 +1,5 @@
 package com.zufar.icedlatte.order.endpoint;
 
-import com.zufar.icedlatte.openapi.dto.CreateNewOrderRequestDto;
 import com.zufar.icedlatte.openapi.dto.OrderResponseDto;
 import com.zufar.icedlatte.openapi.dto.OrderStatus;
 import com.zufar.icedlatte.order.api.OrderCreator;
@@ -31,9 +30,9 @@ public class OrderEndpoint implements com.zufar.icedlatte.openapi.order.api.Orde
 
     @Override
     @PostMapping
-    public ResponseEntity<OrderResponseDto> createOrder(final CreateNewOrderRequestDto orderRequest) {
+    public ResponseEntity<OrderResponseDto> createOrder() {
         log.info("Received order creation request.");
-        var newOrder = orderCreator.createOrder(orderRequest);
+        OrderResponseDto newOrder = orderCreator.createOrder();
         log.info("Order creation request processed.");
         return ResponseEntity.ok()
                 .body(newOrder);

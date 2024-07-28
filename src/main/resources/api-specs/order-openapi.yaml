@@ -42,7 +42,7 @@ paths:
               schema:
                 type: "array"
                 items:
-                  $ref: "#/components/schemas/OrderResponseDto"
+                  $ref: "#/components/schemas/OrderDto"
         "401":
           description: "Unauthorized access."
         "404":
@@ -55,20 +55,14 @@ paths:
         - "Orders"
       summary: "Add order for the authorized user"
       operationId: "createOrder"
-      requestBody:
-        description: "Payload containing a list of order details."
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/CreateNewOrderRequestDto"
+
       responses:
         "200":
           description: "Order placed successfully."
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/OrderResponseDto"
+                $ref: "#/components/schemas/OrderDto"
         "400":
           description: "Invalid input, object invalid."
         "401":
@@ -100,9 +94,9 @@ components:
           type: "string"
           description: "May be different from the user's surname"
 
-    OrderResponseDto:
+    OrderDto:
       type: "object"
-      description: "Response on successfully added or updated order"
+      description: "an Order"
       required:
         - id
         - status
