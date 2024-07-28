@@ -3,7 +3,6 @@ package com.zufar.icedlatte.payment.api;
 import com.stripe.Stripe;
 import com.stripe.model.checkout.Session;
 import com.zufar.icedlatte.openapi.dto.SessionWithClientSecretDto;
-import com.zufar.icedlatte.payment.exception.OrderAlreadyPaidException;
 import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +25,7 @@ public class PaymentProcessor {
         Stripe.apiKey = stripeSecretKey;
     }
 
-    public SessionWithClientSecretDto processPayment(final HttpServletRequest request) throws OrderAlreadyPaidException {
+    public SessionWithClientSecretDto processPayment(final HttpServletRequest request) {
         Session stripeSession = stripeSessionCreator.createSession(request);
 
         SessionWithClientSecretDto sessionDto = new SessionWithClientSecretDto();

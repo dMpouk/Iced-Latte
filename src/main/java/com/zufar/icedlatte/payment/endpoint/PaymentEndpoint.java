@@ -7,7 +7,6 @@ import com.zufar.icedlatte.payment.api.PaymentRetriever;
 import com.zufar.icedlatte.payment.api.StripeSessionProvider;
 import com.zufar.icedlatte.payment.api.WebhookEventProcessor;
 import com.zufar.icedlatte.payment.dto.PaymentSessionStatus;
-import com.zufar.icedlatte.payment.exception.OrderAlreadyPaidException;
 import com.zufar.icedlatte.payment.exception.StripeSessionRetrievalException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -39,7 +38,7 @@ public class PaymentEndpoint implements com.zufar.icedlatte.openapi.payment.api.
     private final StripeSessionProvider stripeSessionProvider;
 
     @GetMapping
-    public ResponseEntity<SessionWithClientSecretDto> processPayment(final HttpServletRequest request) throws OrderAlreadyPaidException {
+    public ResponseEntity<SessionWithClientSecretDto> processPayment(final HttpServletRequest request) {
         log.info("Received request to process payment");
         var processPaymentResponse = paymentProcessor.processPayment(request);
         log.info("Payment session was created successfully");
