@@ -1,58 +1,48 @@
 package com.zufar.icedlatte.order.api;
 
-import com.zufar.icedlatte.openapi.dto.OrderItemRequestDto;
-import com.zufar.icedlatte.openapi.dto.OrderRequestDto;
+import com.zufar.icedlatte.cart.api.ShoppingCartProvider;
+import com.zufar.icedlatte.openapi.dto.AddressDto;
 import com.zufar.icedlatte.openapi.dto.OrderStatus;
+import com.zufar.icedlatte.openapi.dto.ShoppingCartDto;
+import com.zufar.icedlatte.openapi.dto.UserDto;
 import com.zufar.icedlatte.order.converter.OrderDtoConverter;
 import com.zufar.icedlatte.order.entity.Order;
 import com.zufar.icedlatte.order.entity.OrderItem;
-import com.zufar.icedlatte.product.repository.ProductInfoRepository;
+import com.zufar.icedlatte.user.converter.AddressDtoConverter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import java.time.OffsetDateTime;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-import java.util.stream.Collectors;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
-import static com.zufar.icedlatte.order.api.OrderItemsCalculator.calculate;
+import java.util.List;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class OrderEntityCreator {
 
-    private static final int DEFAULT_PRODUCTS_QUANTITY = 0;
-
-    private final ProductInfoRepository productInfoRepository;
     private final OrderDtoConverter orderDtoConverter;
+    private final AddressDtoConverter addressDtoConverter;
+    private final ShoppingCartProvider shoppingCartProvider;
 
-    public Order createNewOrder(OrderRequestDto orderBody, UUID userId) {
-        var order = orderDtoConverter.toOrderEntity(orderBody);
-        var items = createOrderItems(order, orderBody.getItems());
+    @Transactional(propagation = Propagation.REQUIRED)
+    public Order create(UserDto userDto) {
+        ShoppingCartDto shoppingCartDto = shoppingCartProvider.getByUserIdOrThrow(userDto.getId());
 
-        order.setUserId(userId);
-        order.setItems(items);
-        order.setItemsQuantity(calculate(items, DEFAULT_PRODUCTS_QUANTITY));
-        order.setStatus(OrderStatus.CREATED);
-        order.setCreatedAt(OffsetDateTime.now());
+        AddressDto address = userDto.getAddress();
 
-        return order;
-    }
-
-    private List<OrderItem> createOrderItems(Order order, List<OrderItemRequestDto> products) {
-        Map<UUID, Integer> productsWithQuantity = products.stream()
-                .collect(Collectors.toMap(OrderItemRequestDto::getProductId, OrderItemRequestDto::getProductQuantity));
-
-        return productInfoRepository.findAllById(productsWithQuantity.keySet()).stream()
-                .map(productInfo ->
-                        OrderItem.builder()
-                                .order(order)
-                                .productQuantity(productsWithQuantity.get(productInfo.getProductId()))
-                                .productInfo(productInfo)
-                                .build()
-                )
+        List<OrderItem> shoppingOrderItems = shoppingCartDto.getItems().stream()
+                .map(orderDtoConverter::toOrderItem)
                 .toList();
+
+        return Order.builder()
+                .userId(userDto.getId())
+                .status(OrderStatus.CREATED)
+                .items(shoppingOrderItems)
+                .deliveryAddress(addressDtoConverter.toEntity(address))
+                .itemsQuantity(shoppingOrderItems.size())
+                .itemsTotalPrice(shoppingCartDto.getItemsTotalPrice())
+                .build();
     }
 }

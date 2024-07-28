@@ -1,26 +1,25 @@
 package com.zufar.icedlatte.payment.converter;
 
 import com.zufar.icedlatte.cart.converter.ShoppingCartItemDtoConverter;
-import com.zufar.icedlatte.cart.entity.ShoppingCartItem;
 import com.zufar.icedlatte.openapi.dto.ProcessedPaymentDetailsDto;
+import com.zufar.icedlatte.order.entity.OrderItem;
 import com.zufar.icedlatte.payment.entity.Payment;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants;
+import org.mapstruct.ReportingPolicy;
+
 import java.math.BigDecimal;
-import java.util.Set;
+import java.util.List;
 
-import static com.zufar.icedlatte.payment.calculator.PaymentPriceCalculator.DEFAULT_SHIPPING_COST;
-import static com.zufar.icedlatte.payment.calculator.PaymentPriceCalculator.DEFAULT_TAX_RATE;
-
-@Mapper(uses = ShoppingCartItemDtoConverter.class , componentModel = MappingConstants.ComponentModel.SPRING)
+@Mapper(uses = ShoppingCartItemDtoConverter.class,
+        componentModel = MappingConstants.ComponentModel.SPRING,
+        unmappedTargetPolicy = ReportingPolicy.IGNORE,
+        imports = BigDecimal.class)
 public interface PaymentConverter {
 
-    @Mapping(target = "items", source = "shoppingCartItems", qualifiedByName = {"toShoppingCartItemDto"})
-    @Mapping(target = "taxRate", expression = "java(getTaxRate())")
-    @Mapping(target = "shippingCost", expression = "java(getShippingCost())")
+    @Mapping(target = "taxRate", expression = "java(BigDecimal.valueOf(0.05))")
+    @Mapping(target = "shippingCost", expression = "java(BigDecimal.valueOf(5.00))")
     ProcessedPaymentDetailsDto toDto(final Payment payment,
-                                     final Set<ShoppingCartItem> shoppingCartItems);
-    default BigDecimal getTaxRate() { return DEFAULT_TAX_RATE; }
-    default BigDecimal getShippingCost() { return DEFAULT_SHIPPING_COST; }
+                                     final List<OrderItem> orderItems);
 }

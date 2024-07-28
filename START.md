@@ -26,7 +26,8 @@ Key variables which are used in the startup of the app. They are pre-configured 
 - `AWS_PRODUCT_BUCKET` AWS product's bucket name
 - `AWS_USER_BUCKET`  AWS product's bucket name
 - `AWS_DEFAULT_PRODUCT_IMAGES_PATH` Package with product's files 
-- `STRIPE_SECRET_KEY` Stripe secret key for payment integration
+- `STRIPE_SECRET_KEY` Stripe secret key for payment session creation
+- `STRIPE_WEBHOOK_SECRET` Stripe secret key for webhook
 
 Refer to [docker-compose.local.yml](./docker-compose.local.yml)
 
