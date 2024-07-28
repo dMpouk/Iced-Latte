@@ -5,7 +5,7 @@ import com.zufar.icedlatte.cart.repository.ShoppingCartRepository;
 import com.zufar.icedlatte.email.sender.PaymentEmailConfirmation;
 import com.zufar.icedlatte.openapi.dto.OrderDto;
 import com.zufar.icedlatte.order.api.OrderCreator;
-import com.zufar.icedlatte.payment.enums.StripeSessionStatus;
+import com.zufar.icedlatte.payment.enums.StripeSessionConstants;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -18,7 +18,7 @@ import java.util.UUID;
 
 @Slf4j
 @RequiredArgsConstructor
-@Service(StripeSessionStatus.Constants.SESSION_IS_COMPLETED)
+@Service(StripeSessionConstants.SESSION_IS_COMPLETED)
 public class SessionCompletedScenarioHandler implements SessionScenarioHandler {
 
     private final PaymentEmailConfirmation paymentEmailConfirmation;

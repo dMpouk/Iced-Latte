@@ -1,7 +1,7 @@
 package com.zufar.icedlatte.payment.api.scenario;
 
 import com.stripe.model.checkout.Session;
-import com.zufar.icedlatte.payment.enums.StripeSessionStatus;
+import com.zufar.icedlatte.payment.enums.StripeSessionConstants;
 import com.zufar.icedlatte.payment.repository.PaymentRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,7 +15,7 @@ import static com.zufar.icedlatte.payment.enums.StripeSessionStatus.SESSION_IS_E
 
 @Slf4j
 @RequiredArgsConstructor
-@Service(StripeSessionStatus.Constants.SESSION_IS_EXPIRED)
+@Service(StripeSessionConstants.SESSION_IS_EXPIRED)
 public class SessionExpiredScenarioHandler implements SessionScenarioHandler {
 
     private final PaymentRepository paymentRepository;
