@@ -1,4 +1,4 @@
-package com.zufar.icedlatte.payment.api.event;
+package com.zufar.icedlatte.payment.api;
 
 import com.stripe.model.Event;
 import com.stripe.model.checkout.Session;

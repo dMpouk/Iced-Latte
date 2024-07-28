@@ -1,15 +1,14 @@
 package com.zufar.icedlatte.order.api;
 
 import com.zufar.icedlatte.cart.api.ShoppingCartProvider;
-import com.zufar.icedlatte.cart.repository.ShoppingCartRepository;
-import com.zufar.icedlatte.openapi.dto.*;
+import com.zufar.icedlatte.openapi.dto.AddressDto;
+import com.zufar.icedlatte.openapi.dto.OrderStatus;
+import com.zufar.icedlatte.openapi.dto.ShoppingCartDto;
+import com.zufar.icedlatte.openapi.dto.UserDto;
 import com.zufar.icedlatte.order.converter.OrderDtoConverter;
 import com.zufar.icedlatte.order.entity.Order;
 import com.zufar.icedlatte.order.entity.OrderItem;
-import com.zufar.icedlatte.order.repository.OrderRepository;
-import com.zufar.icedlatte.security.api.SecurityPrincipalProvider;
 import com.zufar.icedlatte.user.converter.AddressDtoConverter;
-import com.zufar.icedlatte.user.converter.UserDtoConverter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -25,9 +24,12 @@ public class OrderEntityCreator {
 
     private final OrderDtoConverter orderDtoConverter;
     private final AddressDtoConverter addressDtoConverter;
+    private final ShoppingCartProvider shoppingCartProvider;
 
     @Transactional(propagation = Propagation.REQUIRED)
-    public Order create(final ShoppingCartDto shoppingCartDto, UserDto userDto) {
+    public Order create(UserDto userDto) {
+        ShoppingCartDto shoppingCartDto = shoppingCartProvider.getByUserIdOrThrow(userDto.getId());
+
         AddressDto address = userDto.getAddress();
 
         List<OrderItem> shoppingOrderItems = shoppingCartDto.getItems().stream()

@@ -1,7 +1,6 @@
 package com.zufar.icedlatte.cart.api;
 
 import com.zufar.icedlatte.cart.converter.ShoppingCartDtoConverter;
-import com.zufar.icedlatte.cart.exception.ShoppingCartItemNotFoundException;
 import com.zufar.icedlatte.cart.exception.ShoppingCartNotFoundException;
 import com.zufar.icedlatte.openapi.dto.ShoppingCartDto;
 import com.zufar.icedlatte.cart.entity.ShoppingCart;

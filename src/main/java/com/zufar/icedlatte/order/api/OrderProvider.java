@@ -1,6 +1,6 @@
 package com.zufar.icedlatte.order.api;
 
-import com.zufar.icedlatte.openapi.dto.OrderResponseDto;
+import com.zufar.icedlatte.openapi.dto.OrderDto;
 import com.zufar.icedlatte.openapi.dto.OrderStatus;
 import com.zufar.icedlatte.order.converter.OrderDtoConverter;
 import com.zufar.icedlatte.order.entity.Order;
@@ -30,7 +30,7 @@ public class OrderProvider {
     private final SecurityPrincipalProvider securityPrincipalProvider;
 
     @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.READ_COMMITTED, readOnly = true)
-    public List<OrderResponseDto> getOrdersByStatus(final List<OrderStatus> statusList) {
+    public List<OrderDto> getOrdersByStatus(final List<OrderStatus> statusList) {
         var userId = securityPrincipalProvider.getUserId();
         return orderRepository
                 .findAllByUserIdAndStatus(userId, statusList == null ? DEFAULT_STATUS_LIST : statusList)

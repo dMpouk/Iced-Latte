@@ -2,7 +2,7 @@ package com.zufar.icedlatte.payment.api;
 
 import com.stripe.model.Event;
 import com.stripe.model.checkout.Session;
-import com.zufar.icedlatte.payment.api.event.WebhookEventHandler;
+import com.zufar.icedlatte.order.api.OrderCreator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -19,6 +19,7 @@ public class WebhookEventProcessor {
     private final WebhookEventProvider webhookEventProvider;
     private final WebhookEventParser webhookEventParser;
     private final WebhookEventHandler webhookEventHandler;
+    private final OrderCreator orderCreator;
 
     public void processPaymentEvent(String paymentPayload, String stripeSignatureHeader) {
         log.info("Process Stripe payment event: start Stripe payment event processing");

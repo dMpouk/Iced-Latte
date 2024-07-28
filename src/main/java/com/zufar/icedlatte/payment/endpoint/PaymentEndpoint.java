@@ -2,10 +2,10 @@ package com.zufar.icedlatte.payment.endpoint;
 
 import com.zufar.icedlatte.openapi.dto.ProcessedPaymentDetailsDto;
 import com.zufar.icedlatte.openapi.dto.SessionWithClientSecretDto;
-import com.zufar.icedlatte.payment.api.WebhookEventProcessor;
 import com.zufar.icedlatte.payment.api.PaymentProcessor;
 import com.zufar.icedlatte.payment.api.PaymentRetriever;
 import com.zufar.icedlatte.payment.api.StripeSessionProvider;
+import com.zufar.icedlatte.payment.api.WebhookEventProcessor;
 import com.zufar.icedlatte.payment.dto.PaymentSessionStatus;
 import com.zufar.icedlatte.payment.exception.OrderAlreadyPaidException;
 import com.zufar.icedlatte.payment.exception.StripeSessionRetrievalException;
@@ -39,12 +39,12 @@ public class PaymentEndpoint implements com.zufar.icedlatte.openapi.payment.api.
     private final StripeSessionProvider stripeSessionProvider;
 
     @GetMapping
-    public ResponseEntity<SessionWithClientSecretDto> processPayment(@RequestParam final UUID orderId,
-                                                                     final HttpServletRequest request) throws OrderAlreadyPaidException {
-        log.info("Received request to process payment for the order with id = '{}'", orderId);
-        var paymentSession = paymentProcessor.processPayment(orderId, request);
-        log.info("Payment session was created successfully for the order with id = '{}'", orderId);
-        return ResponseEntity.ok().body(paymentSession);
+    public ResponseEntity<SessionWithClientSecretDto> processPayment(final HttpServletRequest request) throws OrderAlreadyPaidException {
+        log.info("Received request to process payment");
+        var processPaymentResponse = paymentProcessor.processPayment(request);
+        log.info("Payment session was created successfully");
+        return ResponseEntity.ok()
+                .body(processPaymentResponse);
     }
 
     @PostMapping("/stripe/webhook")
@@ -59,12 +59,11 @@ public class PaymentEndpoint implements com.zufar.icedlatte.openapi.payment.api.
     @GetMapping("/status")
     public ResponseEntity<PaymentSessionStatus> getPaymentStatus(@RequestParam final String sessionID) throws StripeSessionRetrievalException {
         log.info("Received request to get payment status, session id {}", sessionID);
-        var sessionStatus = stripeSessionProvider.retrieveSession(sessionID);
+        var sessionStatus = stripeSessionProvider.get(sessionID);
         log.info("Finished processing payment status retrieval");
         return ResponseEntity.ok().body(sessionStatus);
     }
 
-    // TODO: re-work this method, do we need that?
     @GetMapping("/{paymentId}")
     public ResponseEntity<ProcessedPaymentDetailsDto> getPaymentDetails(@PathVariable final String paymentId) {
         ProcessedPaymentDetailsDto retrievedPayment = paymentRetriever.getPaymentDetails(paymentId);

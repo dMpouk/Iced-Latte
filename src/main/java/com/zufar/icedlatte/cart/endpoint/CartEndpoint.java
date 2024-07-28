@@ -4,7 +4,6 @@ import com.zufar.icedlatte.cart.api.AddItemsToShoppingCartHelper;
 import com.zufar.icedlatte.cart.api.ProductQuantityItemUpdater;
 import com.zufar.icedlatte.cart.api.ShoppingCartItemsDeleter;
 import com.zufar.icedlatte.cart.api.ShoppingCartProvider;
-import com.zufar.icedlatte.cart.repository.ShoppingCartRepository;
 import com.zufar.icedlatte.openapi.dto.AddNewItemsToShoppingCartRequest;
 import com.zufar.icedlatte.openapi.dto.DeleteItemsFromShoppingCartRequest;
 import com.zufar.icedlatte.openapi.dto.NewShoppingCartItemDto;
