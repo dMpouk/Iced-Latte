@@ -4,27 +4,39 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 /**
- * Stripe Webhook sends <a href="https://docs.stripe.com/api/events/types">various events</a>,
- * So far we're interested only in "checkout.session.expired" and "checkout.session.completed"
+ * Stripe Webhook sends <a href="https://docs.stripe.com/api/events/types">various events</a>.
+ * So far, we're interested only in "checkout.session.expired" and "checkout.session.completed".
  */
 @Getter
 @RequiredArgsConstructor
 public enum StripeSessionStatus {
 
-    PAYMENT_ACTION_IS_REQUIRED("no payment attempt",
-            "Payment action is required."),
+    /**
+     * Indicates that a payment action is required.
+     */
+    PAYMENT_ACTION_IS_REQUIRED("no payment attempt", "Payment action is required."),
 
-    SESSION_IS_EXPIRED("checkout.session.expired",
-            "Checkout Session is expired."),
+    /**
+     * Indicates that the checkout session has expired.
+     */
+    SESSION_IS_EXPIRED(Constants.SESSION_IS_EXPIRED, "Checkout Session is expired."),
 
-    SESSION_IS_COMPLETED("checkout.session.completed",
-            "Payment has succeeded.");
+    /**
+     * Indicates that the payment has succeeded.
+     */
+    SESSION_IS_COMPLETED(Constants.SESSION_IS_COMPLETED, "Payment has succeeded.");
 
+    private final String status;
+    private final String description;
+
+    /**
+     * Contains constant values for session statuses.
+     */
     public static class Constants {
+
+        private Constants() {}
+
         public static final String SESSION_IS_EXPIRED = "checkout.session.expired";
         public static final String SESSION_IS_COMPLETED = "checkout.session.completed";
     }
-    private final String status;
-    private final String description;
 }
-

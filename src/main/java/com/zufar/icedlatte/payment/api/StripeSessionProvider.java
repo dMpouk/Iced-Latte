@@ -1,9 +1,10 @@
-package com.zufar.icedlatte.payment.api.session;
+package com.zufar.icedlatte.payment.api;
 
 import com.stripe.exception.StripeException;
 import com.stripe.model.checkout.Session;
 import com.stripe.param.checkout.SessionCreateParams;
 import com.zufar.icedlatte.order.entity.Order;
+import com.zufar.icedlatte.payment.converter.StripeSessionLineItemListConverter;
 import com.zufar.icedlatte.payment.dto.PaymentSessionStatus;
 import com.zufar.icedlatte.payment.exception.StripeSessionCreationException;
 import com.zufar.icedlatte.payment.exception.StripeSessionRetrievalException;
@@ -24,7 +25,7 @@ public class StripeSessionProvider {
 
     private final SingleUserProvider singleUserProvider;
     private final StripeShippingOptionsProvider stripeShippingOptionsProvider;
-    private final StripeSessionLineItemsConverter stripeSessionLineItemsConverter;
+    private final StripeSessionLineItemListConverter stripeSessionLineItemListConverter;
 
     public Session createSession(final Order order,
                                  final HttpServletRequest request) {
@@ -35,7 +36,7 @@ public class StripeSessionProvider {
                         .setUiMode(SessionCreateParams.UiMode.EMBEDDED)
                         .setCustomerEmail(user.getEmail())
                         .setReturnUrl(getReturnUrl(request))
-                        .addAllLineItem(stripeSessionLineItemsConverter.convertToLineItems(order))
+                        .addAllLineItem(stripeSessionLineItemListConverter.toLineItems(order.getItems()))
                         .addAllShippingOption(stripeShippingOptionsProvider.getShippingOptions())
                         .setAutomaticTax(
                                 SessionCreateParams.AutomaticTax.builder()

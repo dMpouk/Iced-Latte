@@ -1,4 +1,4 @@
-package com.zufar.icedlatte.payment.api.session;
+package com.zufar.icedlatte.payment.api;
 
 import com.stripe.param.checkout.SessionCreateParams;
 import lombok.RequiredArgsConstructor;

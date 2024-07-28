@@ -1,6 +1,5 @@
 package com.zufar.icedlatte.email.sender;
 
-import com.stripe.model.PaymentIntent;
 import com.stripe.model.checkout.Session;
 import com.zufar.icedlatte.email.message.EmailConfirmMessage;
 import com.zufar.icedlatte.email.message.MessageBuilder;
@@ -26,10 +25,10 @@ public class PaymentEmailConfirmation extends AbstractEmailSender<EmailConfirmMe
         super(javaMailSender, mailMessage, messageBuilders);
     }
 
-    public void send(Session session) {
+    public void send(Session stripeSession) {
         sendNotification(
-                session.getCustomerEmail(),
-                DEFAULT_SUCCESSFUL_EMAIL_MESSAGE.formatted(session.getAmountTotal() / 100.0, session.getCurrency()),
+                stripeSession.getCustomerEmail(),
+                DEFAULT_SUCCESSFUL_EMAIL_MESSAGE.formatted(stripeSession.getAmountTotal() / 100.0, stripeSession.getCurrency()),
                 DEFAULT_EMAIL_SUBJECT
         );
     }

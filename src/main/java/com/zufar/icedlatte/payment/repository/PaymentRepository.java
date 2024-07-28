@@ -7,6 +7,8 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 public interface PaymentRepository extends CrudRepository<Payment, String> {
 
@@ -17,5 +19,5 @@ public interface PaymentRepository extends CrudRepository<Payment, String> {
                                              @Param("status") String status,
                                              @Param("description") String description);
 
-    Payment findBySessionId(String id);
+    Optional<Payment> findBySessionId(String id);
 }

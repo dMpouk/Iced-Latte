@@ -4,6 +4,7 @@ import com.stripe.model.checkout.Session;
 import com.zufar.icedlatte.email.sender.PaymentEmailConfirmation;
 import com.zufar.icedlatte.openapi.dto.OrderStatus;
 import com.zufar.icedlatte.order.repository.OrderRepository;
+import com.zufar.icedlatte.payment.entity.Payment;
 import com.zufar.icedlatte.payment.enums.StripeSessionStatus;
 import com.zufar.icedlatte.payment.repository.PaymentRepository;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +13,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Optional;
 
 import static com.zufar.icedlatte.payment.enums.StripeSessionStatus.SESSION_IS_COMPLETED;
 
@@ -28,9 +31,9 @@ public class SessionCompletedScenarioHandler implements SessionScenarioHandler {
     public void handle(Session session) {
         log.info("Checkout session completed {}, updating payment and order tables.", session.getId());
         paymentRepository.updateStatusAndDescriptionInPayment(session.getId(), SESSION_IS_COMPLETED.toString(), SESSION_IS_COMPLETED.getDescription());
-        var paymentEntity = paymentRepository.findBySessionId(session.getId());
+        Optional<Payment> paymentEntity = paymentRepository.findBySessionId(session.getId());
         // TODO: update shipping option?
-        orderRepository.updateOrderStatus(paymentEntity.getOrderId(), OrderStatus.PAID.toString());
+        orderRepository.updateOrderStatus(paymentEntity.get().getOrderId(), OrderStatus.PAID.toString());
         paymentEmailConfirmation.send(session);
         log.info("Confirmation email was sent.");
     }

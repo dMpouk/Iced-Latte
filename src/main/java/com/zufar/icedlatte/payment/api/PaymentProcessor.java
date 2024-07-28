@@ -1,17 +1,14 @@
 package com.zufar.icedlatte.payment.api;
 
 import com.stripe.Stripe;
-import com.stripe.exception.StripeException;
-import com.stripe.model.checkout.Session;
-import com.stripe.param.checkout.SessionExpireParams;
 import com.zufar.icedlatte.openapi.dto.OrderStatus;
 import com.zufar.icedlatte.openapi.dto.SessionWithClientSecretDto;
 import com.zufar.icedlatte.order.api.OrderProvider;
-import com.zufar.icedlatte.payment.api.session.StripeSessionProvider;
-import com.zufar.icedlatte.payment.config.StripeConfiguration;
+import com.zufar.icedlatte.payment.entity.Payment;
+import com.zufar.icedlatte.payment.enums.StripeSessionStatus;
 import com.zufar.icedlatte.payment.exception.OrderAlreadyPaidException;
+import com.zufar.icedlatte.payment.repository.PaymentRepository;
 import com.zufar.icedlatte.security.api.SecurityPrincipalProvider;
-import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,17 +22,13 @@ import java.util.UUID;
 @Service
 public class PaymentProcessor {
 
-    private final StripeConfiguration stripeConfiguration;
     private final StripeSessionProvider stripeSessionProvider;
     private final SecurityPrincipalProvider securityPrincipalProvider;
-    private final PaymentCreator paymentCreator;
     private final OrderProvider orderProvider;
+    private final PaymentRepository paymentRepository;
 
     @Value("${stripe.secret-key}")
-    private String stripeSecretKey;
-
-    @PostConstruct
-    private void initStripe() {
+    public void setStripeSecretKey(String stripeSecretKey) {
         Stripe.apiKey = stripeSecretKey;
     }
 
@@ -50,9 +43,14 @@ public class PaymentProcessor {
         // TODO: should we check if there is already created stripeSession?
         var stripeSession = stripeSessionProvider.createSession(order, request);
 
-        paymentCreator.createPayment(order, stripeSession);
+        var payment = Payment.builder()
+                .orderId(order.getId())
+                .sessionId(stripeSession.getId())
+                .status(StripeSessionStatus.PAYMENT_ACTION_IS_REQUIRED)
+                .build();
+        paymentRepository.save(payment);
 
-        SessionWithClientSecretDto sessionDto = new SessionWithClientSecretDto();
+        var sessionDto = new SessionWithClientSecretDto();
         sessionDto.setSessionId(stripeSession.getId());
         sessionDto.setClientSecret(stripeSession.getClientSecret());
 

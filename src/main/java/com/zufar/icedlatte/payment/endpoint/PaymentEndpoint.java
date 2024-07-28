@@ -2,10 +2,10 @@ package com.zufar.icedlatte.payment.endpoint;
 
 import com.zufar.icedlatte.openapi.dto.ProcessedPaymentDetailsDto;
 import com.zufar.icedlatte.openapi.dto.SessionWithClientSecretDto;
-import com.zufar.icedlatte.payment.api.event.WebhookEventProcessor;
+import com.zufar.icedlatte.payment.api.WebhookEventProcessor;
 import com.zufar.icedlatte.payment.api.PaymentProcessor;
 import com.zufar.icedlatte.payment.api.PaymentRetriever;
-import com.zufar.icedlatte.payment.api.session.StripeSessionProvider;
+import com.zufar.icedlatte.payment.api.StripeSessionProvider;
 import com.zufar.icedlatte.payment.dto.PaymentSessionStatus;
 import com.zufar.icedlatte.payment.exception.OrderAlreadyPaidException;
 import com.zufar.icedlatte.payment.exception.StripeSessionRetrievalException;

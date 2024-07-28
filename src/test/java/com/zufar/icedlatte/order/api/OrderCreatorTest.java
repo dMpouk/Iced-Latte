@@ -1,7 +1,6 @@
 package com.zufar.icedlatte.order.api;
 
-import com.zufar.icedlatte.cart.api.ShoppingCartManager;
-import com.zufar.icedlatte.openapi.dto.AddressDto;
+import com.zufar.icedlatte.cart.api.ShoppingCartProvider;
 import com.zufar.icedlatte.openapi.dto.OrderResponseDto;
 import com.zufar.icedlatte.openapi.dto.ShoppingCartDto;
 import com.zufar.icedlatte.order.converter.OrderDtoConverter;
@@ -9,7 +8,6 @@ import com.zufar.icedlatte.order.entity.Order;
 import com.zufar.icedlatte.order.repository.OrderRepository;
 import com.zufar.icedlatte.security.api.SecurityPrincipalProvider;
 import com.zufar.icedlatte.user.api.AddressProvider;
-import com.zufar.icedlatte.user.entity.Address;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -41,7 +39,8 @@ class OrderCreatorTest {
     private OrderDtoConverter orderDtoConverter;
 
     @Mock
-    private ShoppingCartManager shoppingCartManager;
+    private  ShoppingCartProvider shoppingCartProvider;
+
 
     @Mock
     private AddressProvider addressProvider;
@@ -58,7 +57,7 @@ class OrderCreatorTest {
         var shoppingCartDto = new ShoppingCartDto();
 
         when(securityPrincipalProvider.getUserId()).thenReturn(userId);
-        when(shoppingCartManager.getByUserIdOrThrow(userId)).thenReturn(shoppingCartDto);
+        when(shoppingCartProvider.getByUserIdOrThrow(userId)).thenReturn(shoppingCartDto);
         when(addressProvider.addNewAddress(addressDto)).thenReturn(addressId);
         when(orderRepository.saveAndFlush(orderEntity)).thenReturn(orderEntity);
         when(orderDtoConverter.toResponseDto(orderEntity)).thenReturn(orderResponse);
@@ -68,7 +67,7 @@ class OrderCreatorTest {
         assertEquals(result, orderResponse);
 
         verify(securityPrincipalProvider, times(1)).getUserId();
-        verify(shoppingCartManager, times(1)).getByUserIdOrThrow(userId);
+        verify(shoppingCartProvider, times(1)).getByUserIdOrThrow(userId);
         verify(addressProvider, times(1)).addNewAddress(addressDto);
         verify(orderRepository, times(1)).saveAndFlush(orderEntity);
         verify(orderDtoConverter, times(1)).toResponseDto(orderEntity);

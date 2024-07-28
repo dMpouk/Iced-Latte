@@ -1,11 +1,9 @@
-package com.zufar.icedlatte.payment.api.event;
+package com.zufar.icedlatte.payment.api;
 
 import com.stripe.model.Event;
 import com.stripe.model.checkout.Session;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
 
 /**
  * This class is responsible for parsing payment event to session object.
