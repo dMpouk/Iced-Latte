@@ -69,6 +69,7 @@ jobs:
               -e REDIS_PORT=${{ vars.REDIS_PORT }} \
               -e SPRING_AI_OPENAI_API_KEY=${{ secrets.SPRING_AI_OPENAI_API_KEY }} \
               -e STRIPE_SECRET_KEY=${{ secrets.STRIPE_SECRET_KEY }} \
+              -e STRIPE_WEBHOOK_SECRET=${{ secrets.STRIPE_WEBHOOK_SECRET }} \ 
               -v ${{ vars.APP_DATA_PATH_ON_THE_REMOTE_SERVER }}:/usr/app/logs \
               -v ${{ vars.APP_DATA_PATH_ON_THE_REMOTE_SERVER }}/products:/usr/app/products \
               zufarexplainedit/iced-latte-backend:latest-version
