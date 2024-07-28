@@ -12,6 +12,7 @@
 [![Docker Pulls](https://img.shields.io/docker/pulls/zufarexplainedit/iced-latte-backend.svg)](https://hub.docker.com/r/zufarexplainedit/iced-latte-backend/)
 [![GitHub contributors](https://img.shields.io/github/contributors/Sunagatov/Iced-Latte)](https://github.com/Sunagatov/Iced-Latte/graphs/contributors)
 [![GitHub stars](https://img.shields.io/github/stars/Sunagatov/Iced-Latte)](https://github.com/Sunagatov/Iced-Latte/stargazers)
+[![Fork on GitHub](https://img.shields.io/github/forks/Sunagatov/Iced-Latte.svg?style=social)](https://github.com/Sunagatov/Iced-Latte/network/members)
 </div>
 
 ## Table of Contents
