@@ -19,24 +19,13 @@ public enum StripeSessionStatus {
     /**
      * Indicates that the checkout session has expired.
      */
-    SESSION_IS_EXPIRED(Constants.SESSION_IS_EXPIRED, "Checkout Session is expired."),
+    SESSION_IS_EXPIRED(StripeSessionConstants.SESSION_IS_EXPIRED, "Checkout Session is expired."),
 
     /**
      * Indicates that the payment has succeeded.
      */
-    SESSION_IS_COMPLETED(Constants.SESSION_IS_COMPLETED, "Payment has succeeded.");
+    SESSION_IS_COMPLETED(StripeSessionConstants.SESSION_IS_COMPLETED, "Payment has succeeded.");
 
     private final String status;
     private final String description;
-
-    /**
-     * Contains constant values for session statuses.
-     */
-    public static class Constants {
-
-        private Constants() {}
-
-        public static final String SESSION_IS_EXPIRED = "checkout.session.expired";
-        public static final String SESSION_IS_COMPLETED = "checkout.session.completed";
-    }
 }
