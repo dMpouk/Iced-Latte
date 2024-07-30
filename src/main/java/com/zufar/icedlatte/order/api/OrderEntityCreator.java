@@ -6,7 +6,7 @@ import com.zufar.icedlatte.openapi.dto.ShoppingCartDto;
 import com.zufar.icedlatte.order.converter.OrderDtoConverter;
 import com.zufar.icedlatte.order.entity.Order;
 import com.zufar.icedlatte.order.entity.OrderItem;
-import com.zufar.icedlatte.user.entity.Address;
+import com.zufar.icedlatte.user.api.SingleUserProvider;
 import com.zufar.icedlatte.user.entity.UserEntity;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,26 +24,25 @@ public class OrderEntityCreator {
 
     private final OrderDtoConverter orderDtoConverter;
     private final ShoppingCartProvider shoppingCartProvider;
+    private final SingleUserProvider singleUserProvider;
 
     @Transactional(propagation = Propagation.REQUIRED)
-    public Order create(UserEntity user) {
-        ShoppingCartDto shoppingCartDto = shoppingCartProvider.getByUserIdOrThrow(user.getId());
+    public Order create(final UUID userId) {
+        UserEntity user = singleUserProvider.getUserEntityById(userId);
 
-        Address address = user.getAddress();
+        ShoppingCartDto shoppingCartDto = shoppingCartProvider.getByUserIdOrThrow(userId);
 
-        var order = Order.builder()
-                .id(UUID.randomUUID())
-                .userId(user.getId())
-                .status(OrderStatus.CREATED)
-                .deliveryAddress(address)
-                .itemsQuantity(shoppingCartDto.getItemsQuantity())
-                .itemsTotalPrice(shoppingCartDto.getItemsTotalPrice())
-                .build();
         List<OrderItem> shoppingOrderItems = shoppingCartDto.getItems().stream()
                 .map(orderDtoConverter::toOrderItem)
-                .peek(item -> item.setOrderId(order.getId()))
                 .toList();
-        order.setItems(shoppingOrderItems);
-        return order;
+
+        return Order.builder()
+                .userId(userId)
+                .status(OrderStatus.CREATED)
+                .deliveryAddress(user.getAddress())
+                .itemsQuantity(shoppingCartDto.getItemsQuantity())
+                .itemsTotalPrice(shoppingCartDto.getItemsTotalPrice())
+                .items(shoppingOrderItems)
+                .build();
     }
 }

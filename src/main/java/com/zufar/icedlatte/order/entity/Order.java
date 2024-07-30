@@ -11,6 +11,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
+import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -59,6 +60,16 @@ public class Order {
 
     @Column(name = "items_total_price", nullable = false)
     private BigDecimal itemsTotalPrice;
+
+    @PrePersist
+    public void prePersist() {
+        if (this.id == null) {
+            this.id = UUID.randomUUID();
+        }
+        for (OrderItem orderItem : items) {
+            orderItem.setOrderId(this.id);
+        }
+    }
 
     @Override
     public String toString() {
