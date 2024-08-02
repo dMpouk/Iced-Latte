@@ -115,6 +115,15 @@ docker compose -f docker-compose.local.yml up -d --build
 
 AWS is available only in production, therefore there are no real pictures of products, only stubs.
 
+#### Stripe Integration Testing (local)
+
+1. Install [Stripe CLI](https://docs.stripe.com/stripe-cli)
+2. Redirect webhook events
+   ```bash
+   stripe listen --forward-to localhost:80/backend/api/v1/payment/stripe/webhook
+   ```
+3. Use [test cards](https://docs.stripe.com/testing): `4242424242424242`
+
 ## Database Navigator
 
 > For Ultimate Edition consider using [Database Tools and SQL plugin](https://www.jetbrains.com/help/idea/relational-databases.html)
