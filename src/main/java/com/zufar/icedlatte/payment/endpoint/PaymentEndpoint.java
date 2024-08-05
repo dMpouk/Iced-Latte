@@ -1,9 +1,7 @@
 package com.zufar.icedlatte.payment.endpoint;
 
-import com.zufar.icedlatte.openapi.dto.ProcessedPaymentDetailsDto;
 import com.zufar.icedlatte.openapi.dto.SessionWithClientSecretDto;
 import com.zufar.icedlatte.payment.api.PaymentProcessor;
-import com.zufar.icedlatte.payment.api.PaymentRetriever;
 import com.zufar.icedlatte.payment.api.StripeSessionProvider;
 import com.zufar.icedlatte.payment.api.WebhookEventProcessor;
 import com.zufar.icedlatte.payment.dto.PaymentSessionStatus;
@@ -18,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 
@@ -30,7 +27,6 @@ public class PaymentEndpoint implements com.zufar.icedlatte.openapi.payment.api.
 
     public static final String PAYMENT_URL = "/api/v1/payment";
 
-    private final PaymentRetriever paymentRetriever;
     private final PaymentProcessor paymentProcessor;
     private final WebhookEventProcessor webhookEventProcessor;
     private final StripeSessionProvider stripeSessionProvider;
@@ -59,11 +55,5 @@ public class PaymentEndpoint implements com.zufar.icedlatte.openapi.payment.api.
         var sessionStatus = stripeSessionProvider.get(sessionID);
         log.info("Finished processing payment status retrieval");
         return ResponseEntity.ok().body(sessionStatus);
-    }
-
-    @GetMapping("/{paymentId}")
-    public ResponseEntity<ProcessedPaymentDetailsDto> getPaymentDetails(@PathVariable final String paymentId) {
-        ProcessedPaymentDetailsDto retrievedPayment = paymentRetriever.getPaymentDetails(paymentId);
-        return ResponseEntity.ok().body(retrievedPayment);
     }
 }
