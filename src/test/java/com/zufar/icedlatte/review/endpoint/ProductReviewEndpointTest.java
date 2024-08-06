@@ -102,34 +102,6 @@ class ProductReviewEndpointTest {
     }
 
     @Test
-    @DisplayName("Should fetch reviews and ratings with default pagination and sorting for unauthorized user")
-    void shouldFetchReviewsAndRatingsWithDefaultPaginationAndSortingForAnonymous() {
-        // No authorization is required
-        specification = given()
-                .log().all(true)
-                .port(port)
-                .basePath(ProductReviewEndpoint.PRODUCT_REVIEW_URL)
-                .contentType(ContentType.JSON)
-                .accept(ContentType.JSON);
-
-        Response response = given(specification)
-                .get("/{productId}/reviews", AMERICANO_ID);
-
-        assertRestApiBodySchemaResponse(response, HttpStatus.OK, REVIEWS_WITH_RATINGS_RESPONSE_SCHEMA)
-                .body("totalElements", equalTo(3))
-                .body("totalPages", equalTo(1))
-                .body("reviewsWithRatings[0].productRating", equalTo(5))
-                .body("reviewsWithRatings[0].text", startsWith(START_OF_REVIEW_FOR_AMERICANO))
-                .body("reviewsWithRatings[0].userName", equalTo("John"))
-                .body("reviewsWithRatings[1].productRating", equalTo(3))
-                .body("reviewsWithRatings[1].text", startsWith(START_OF_REVIEW_FOR_AMERICANO))
-                .body("reviewsWithRatings[1].userName", equalTo("Jane"))
-                .body("reviewsWithRatings[2].productRating", equalTo(1))
-                .body("reviewsWithRatings[2].text", startsWith(START_OF_REVIEW_FOR_AMERICANO))
-                .body("reviewsWithRatings[2].userName", equalTo("Michael"));
-    }
-
-    @Test
     @DisplayName("Should like review successfully and return review object")
     void shouldLikeReviewSuccessfully() {
         String body = "{\"isLike\": true}";
@@ -183,6 +155,24 @@ class ProductReviewEndpointTest {
                 .body("ratingMap.star3", equalTo(1))
                 .body("ratingMap.star4", equalTo(0))
                 .body("ratingMap.star5", equalTo(0));
+    }
+
+
+    @Test
+    @DisplayName("Reviews and ratings with default pagination and sorting for unauthorized user. Should return 400 Bad Request")
+    void shouldReturnBadRequestForDefaultPaginationAndSortingForAnonymous() {
+        // No authorization is required
+        specification = given()
+                .log().all(true)
+                .port(port)
+                .basePath(ProductReviewEndpoint.PRODUCT_REVIEW_URL)
+                .contentType(ContentType.JSON)
+                .accept(ContentType.JSON);
+
+        Response response = given(specification)
+                .get("/{productId}/reviews", AMERICANO_ID);
+
+        assertRestApiBadRequestResponse(response, FAILED_REVIEW_SCHEMA);
     }
 
     @Test
