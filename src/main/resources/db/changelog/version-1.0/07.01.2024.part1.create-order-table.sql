@@ -2,6 +2,7 @@ CREATE TABLE IF NOT EXISTS orders
 (
     id                          UUID        PRIMARY KEY,
     user_id                     UUID        NOT NULL,
+    session_id                  VARCHAR(255) NOT NULL,
     created_at                  TIMESTAMPTZ DEFAULT current_timestamp,
     status                      VARCHAR(55) NOT NULL,
     items_quantity              INT         NOT NULL CHECK (items_quantity >= 0),
