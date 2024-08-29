@@ -2,12 +2,8 @@ package com.zufar.icedlatte.user.endpoint;
 
 import com.zufar.icedlatte.email.api.EmailTokenConformer;
 import com.zufar.icedlatte.email.api.EmailTokenSender;
-import com.zufar.icedlatte.openapi.dto.ChangeUserPasswordRequest;
-import com.zufar.icedlatte.openapi.dto.ConfirmEmailRequest;
-import com.zufar.icedlatte.openapi.dto.UpdateUserAccountRequest;
-import com.zufar.icedlatte.openapi.dto.UserDto;
+import com.zufar.icedlatte.openapi.dto.*;
 import com.zufar.icedlatte.security.api.SecurityPrincipalProvider;
-import com.zufar.icedlatte.security.dto.UserRegistrationRequest;
 import com.zufar.icedlatte.user.api.ChangeUserPasswordOperationPerformer;
 import com.zufar.icedlatte.user.api.DeleteUserOperationPerformer;
 import com.zufar.icedlatte.user.api.SingleUserProvider;
@@ -146,8 +142,7 @@ public class UserEndpoint implements com.zufar.icedlatte.openapi.user.api.UserAp
     @PostMapping(path = "/password/reset/confirm")
     public ResponseEntity<Void> confirmResetUserPassword(@RequestBody final ConfirmEmailRequest confirmEmailRequest) {
         log.info("Received email confirmation request to reset password");
-        emailTokenConformer.confirmResetPasswordEmailByCode(
-                new com.zufar.icedlatte.security.dto.ConfirmEmailRequest(confirmEmailRequest.getToken()));
+        emailTokenConformer.confirmResetPasswordEmailByCode(new ConfirmEmailRequest(confirmEmailRequest.getToken()));
         log.info("Email verification to reset password completed");
         return ResponseEntity.status(HttpStatus.OK).build();
     }
