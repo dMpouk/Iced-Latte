@@ -1,5 +1,6 @@
 package com.zufar.icedlatte.security.endpoint;
 
+import com.zufar.icedlatte.common.validation.email.EmailValidator;
 import com.zufar.icedlatte.email.api.EmailTokenConformer;
 import com.zufar.icedlatte.email.api.EmailTokenSender;
 import com.zufar.icedlatte.openapi.dto.UserDto;
@@ -44,15 +45,20 @@ public class UserSecurityEndpoint implements SecurityApi {
     private final ChangeUserPasswordOperationPerformer changeUserPasswordOperationPerformer;
 
     private final HttpServletRequest httpRequest;
+    private final EmailValidator emailValidator;
 
     @Override
     @PostMapping("/register")
     public ResponseEntity<String> register(@RequestBody final UserRegistrationRequest request) {
-        log.info("Received registration request for user with email = '{}'", request.getEmail());
+        String email = request.getEmail();
+        log.info("Received registration request for user with email = '{}'", email);
+        if (emailValidator.isNotValid(email) && !emailValidator.isEmailUnique(email)) {
+            return ResponseEntity.badRequest().body("Invalid email format");
+        }
         emailTokenSender.sendEmailVerificationCode(request);
-        log.info("Email verification token sent to the user with email = '{}'", request.getEmail());
+        log.info("Email verification token sent to the user with email = '{}'", email);
         return ResponseEntity.ok()
-                .body(String.format("Email verification token sent to the user with email = %s%nIf You don't receive an email, please check your spam or may be the email address is incorrect", request.getEmail()));
+                .body(String.format("Email verification token sent to the user with email = %s%nIf You don't receive an email, please check your spam or may be the email address is incorrect", email));
     }
 
     @Override

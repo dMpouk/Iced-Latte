@@ -1,19 +1,22 @@
 package com.zufar.icedlatte.common.validation.email;
 
 import com.zufar.icedlatte.user.repository.UserRepository;
-import jakarta.validation.ConstraintValidator;
-import jakarta.validation.ConstraintValidatorContext;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 @RequiredArgsConstructor
 @Component
-public class UniqueEmailValidator implements ConstraintValidator<UniqueEmail, String> {
+public class EmailValidator {
+
+    private static final String emailRegex = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
 
     private final UserRepository userCrudRepository;
 
-    @Override
-    public boolean isValid(String email, ConstraintValidatorContext constraintValidatorContext) {
+    public boolean isNotValid(String email) {
+        return email == null || !email.matches(emailRegex);
+    }
+
+    public boolean isEmailUnique(String email) {
         return userCrudRepository
                 .findByEmail(email)
                 .isEmpty();
