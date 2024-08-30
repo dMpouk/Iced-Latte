@@ -577,10 +577,10 @@
                             <inputSpec>${project.basedir}/src/main/resources/api-specs/security-openapi.yaml</inputSpec>
                             <generatorName>spring</generatorName>
                             <apiPackage>${openapi-package}.security.api</apiPackage>
-                            <generateModels>false</generateModels>
+                            <modelPackage>${openapi-package-with-dto}</modelPackage>
+                            <generateModels>true</generateModels>
                             <configOptions>
                                 <useJakartaEe>true</useJakartaEe>
-                                <modelPackage>com.zufar.icedlatte.security.dto</modelPackage>
                                 <interfaceOnly>true</interfaceOnly>
                                 <useTags>true</useTags>
                             </configOptions>
