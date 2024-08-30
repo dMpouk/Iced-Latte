@@ -1,12 +1,17 @@
 package com.zufar.icedlatte.security.endpoint;
 
-import com.zufar.icedlatte.common.validation.email.EmailValidator;
 import com.zufar.icedlatte.email.api.EmailTokenConformer;
 import com.zufar.icedlatte.email.api.EmailTokenSender;
+import com.zufar.icedlatte.openapi.dto.ChangePasswordRequest;
+import com.zufar.icedlatte.openapi.dto.ConfirmEmailRequest;
+import com.zufar.icedlatte.openapi.dto.ForgotPasswordRequest;
+import com.zufar.icedlatte.openapi.dto.UserAuthenticationRequest;
+import com.zufar.icedlatte.openapi.dto.UserAuthenticationResponse;
 import com.zufar.icedlatte.openapi.dto.UserDto;
+import com.zufar.icedlatte.openapi.dto.UserRegistrationRequest;
+import com.zufar.icedlatte.openapi.dto.UserRegistrationResponse;
 import com.zufar.icedlatte.openapi.security.api.SecurityApi;
 import com.zufar.icedlatte.security.api.UserAuthenticationService;
-import com.zufar.icedlatte.openapi.dto.*;
 import com.zufar.icedlatte.security.jwt.JwtAuthenticationProvider;
 import com.zufar.icedlatte.security.jwt.JwtBlacklistValidator;
 import com.zufar.icedlatte.security.jwt.JwtTokenFromAuthHeaderExtractor;
@@ -45,16 +50,11 @@ public class UserSecurityEndpoint implements SecurityApi {
     private final ChangeUserPasswordOperationPerformer changeUserPasswordOperationPerformer;
 
     private final HttpServletRequest httpRequest;
-    private final EmailValidator emailValidator;
 
-    @Override
     @PostMapping("/register")
     public ResponseEntity<String> register(@RequestBody final UserRegistrationRequest request) {
         String email = request.getEmail();
         log.info("Received registration request for user with email = '{}'", email);
-        if (emailValidator.isNotValid(email) && !emailValidator.isEmailUnique(email)) {
-            return ResponseEntity.badRequest().body("Invalid email format");
-        }
         emailTokenSender.sendEmailVerificationCode(request);
         log.info("Email verification token sent to the user with email = '{}'", email);
         return ResponseEntity.ok()
@@ -107,8 +107,8 @@ public class UserSecurityEndpoint implements SecurityApi {
     public ResponseEntity<Void> forgotPassword(@RequestBody final ForgotPasswordRequest request) {
         log.info("Received forgot password request for user");
         UserDto userDto = singleUserProvider.getUserByEmail(request.getEmail());
-        UserRegistrationRequest requestVerification = new UserRegistrationRequest(userDto.getFirstName(), userDto.getLastName(),
-                userDto.getEmail(), "");
+        UserRegistrationRequest requestVerification =
+                new UserRegistrationRequest(userDto.getFirstName(), userDto.getLastName(), userDto.getEmail(), "");
         emailTokenSender.sendEmailVerificationCode(requestVerification);
         log.info("Send email with verification code for user");
         return ResponseEntity.ok().build();

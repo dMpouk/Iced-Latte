@@ -185,7 +185,10 @@ components:
           description: "User's phone number."
         email:
           type: "string"
+          format: "email"
+          maxLength: 128
           description: "User's email address must be a valid email format"
+          pattern: "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$"
         password:
           type: "string"
           description: "Password must be between 8 and 128 characters, with at least one letter, one digit, and may include special characters @$!%*?&."
