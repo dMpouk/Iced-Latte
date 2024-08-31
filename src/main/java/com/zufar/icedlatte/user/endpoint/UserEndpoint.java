@@ -54,7 +54,7 @@ public class UserEndpoint implements com.zufar.icedlatte.openapi.user.api.UserAp
 
     @Override
     @GetMapping
-    public ResponseEntity<UserDto> getUserById() {
+    public ResponseEntity<UserDto> getUserProfile() {
         UUID userId = securityPrincipalProvider.getUserId();
         log.info("Received the request to get the user with userId - {}.", userId);
         UserDto userDto = singleUserProvider.getUserById(userId);
@@ -65,7 +65,7 @@ public class UserEndpoint implements com.zufar.icedlatte.openapi.user.api.UserAp
 
     @Override
     @PutMapping
-    public ResponseEntity<UserDto> editUserById(@Valid @RequestBody UpdateUserAccountRequest updateUserAccountRequest) {
+    public ResponseEntity<UserDto> editUserProfile(@Valid @RequestBody UpdateUserAccountRequest updateUserAccountRequest) {
         UUID userId = securityPrincipalProvider.getUserId();
         log.info("Received the request to edit the User with userId - {}.", userId);
         UserDto updatedUserDto = updateUserOperationPerformer.updateUser(updateUserAccountRequest);
@@ -86,7 +86,7 @@ public class UserEndpoint implements com.zufar.icedlatte.openapi.user.api.UserAp
 
     @Override
     @DeleteMapping
-    public ResponseEntity<Void> deleteUserById() {
+    public ResponseEntity<Void> deleteUserProfile() {
         UUID userId = securityPrincipalProvider.getUserId();
         log.info("Received the request to delete the user's account.");
         deleteUserOperationPerformer.deleteUser(userId);
