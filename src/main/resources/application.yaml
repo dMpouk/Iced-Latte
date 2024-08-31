@@ -83,7 +83,7 @@ spring:
     host: smtp.gmail.com
     port: 587
     username: youricedlatteshop@gmail.com
-    password: "${MAIL_PASSWORD}"
+    password: "kfcf kyba hrab nyij"
     subject:
       confirmation: "Iced Latte - Email Confirmation"
     properties:
