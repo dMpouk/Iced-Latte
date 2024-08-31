@@ -249,11 +249,15 @@ components:
       properties:
         newPassword:
           type: "string"
-          description: "The new password for the user. Password must be at least 8 characters long and contain at least one letter, one digit, and may include special characters @$!%*?&"
+          description: "Password must be between 8 and 128 characters, with at least one letter, one digit, and may include special characters @$!%*?&."
+          minLength: 8
+          maxLength: 128
           pattern: "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d@$!%*?&]{8,}$"
         oldPassword:
           type: "string"
-          description: "The current password for the user. Password must be at least 8 characters long and contain at least one letter, one digit, and may include special characters @$!%*?&"
+          description: "Password must be between 8 and 128 characters, with at least one letter, one digit, and may include special characters @$!%*?&."
+          minLength: 8
+          maxLength: 128
           pattern: "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d@$!%*?&]{8,}$"
 
     UserDto:

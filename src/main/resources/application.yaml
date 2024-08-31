@@ -136,6 +136,7 @@ springdoc:
   swagger-ui:
     path: /api/docs/swagger-ui
     enabled: true
+    url: https://iced-latte.uk/backend
 
 #
 # Management Properties
