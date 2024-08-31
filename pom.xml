@@ -142,7 +142,7 @@
         <google-auth-library-oauth2-http.version>1.23.0</google-auth-library-oauth2-http.version>
         <amaxzon-aws-version>1.12.744</amaxzon-aws-version>
         <spring-ai-bom.version>1.0.0-SNAPSHOT</spring-ai-bom.version>
-        <log4j-bom.version>2.19.0</log4j-bom.version>
+        <log4j-bom.version>2.23.1</log4j-bom.version>
     </properties>
 
     <!-- Dependencies -->
