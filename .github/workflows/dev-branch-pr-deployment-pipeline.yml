@@ -52,7 +52,6 @@ jobs:
               -e APP_SERVER_PORT=${{ vars.APP_SERVER_PORT }} \
               -e APP_JWT_SECRET=${{ secrets.APP_JWT_SECRET }} \
               -e APP_JWT_REFRESH_SECRET=${{ secrets.APP_JWT_REFRESH_SECRET }} \
-              -e MAIL_PASSWORD=${{ secrets.MAIL_PASSWORD }} \
               -e DATASOURCE_PORT=${{ vars.DATASOURCE_PORT }} \
               -e DATASOURCE_NAME=${{ vars.DATASOURCE_NAME }} \
               -e DATASOURCE_USERNAME=${{ vars.DATASOURCE_USERNAME }} \
