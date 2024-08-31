@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS orders
+CREATE TABLE IF NOT EXISTS public.orders
 (
     id                          UUID        PRIMARY KEY,
     user_id                     UUID        NOT NULL,
