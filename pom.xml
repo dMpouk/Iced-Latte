@@ -81,10 +81,10 @@
         <junit-platform-commons.version>1.4.0</junit-platform-commons.version>
         <junit-platform-launcher.version>1.4.0</junit-platform-launcher.version>
         <junit-jupiter.version>5.11.0</junit-jupiter.version>
-        <testcontainers.version>1.20.1</testcontainers.version>
+        <testcontainers.version>1.19.8</testcontainers.version>
         <instancio-junit.version>3.0.1</instancio-junit.version>
         <rest-assured.version>5.4.0</rest-assured.version>
-        <json-schema-validator.version>5.5.0</json-schema-validator.version>
+        <json-schema-validator.version>5.4.0</json-schema-validator.version>
 
         <!-- Spring Dependencies Versions -->
         <spring-boot-starter-web.version>3.3.0</spring-boot-starter-web.version>
@@ -96,7 +96,7 @@
         <!-- JWT Dependencies Versions -->
         <jjwt-impl.version>0.11.5</jjwt-impl.version>
         <jjwt-api.version>0.11.5</jjwt-api.version>
-        <jjwt-jackson.version>0.12.6</jjwt-jackson.version>
+        <jjwt-jackson.version>0.11.5</jjwt-jackson.version>
 
         <!-- Validation Dependencies Versions -->
         <validation-api.version>2.0.1.Final</validation-api.version>
@@ -119,7 +119,7 @@
         <!-- Apache Maven Plugin Dependencies Versions -->
         <sonar-maven-plugin.version>3.10.0.2594</sonar-maven-plugin.version>
         <maven-compiler-plugin.version>3.5.1</maven-compiler-plugin.version>
-        <openapi-generator-maven-plugin.version>7.8.0</openapi-generator-maven-plugin.version>
+        <openapi-generator-maven-plugin.version>6.6.0</openapi-generator-maven-plugin.version>
         <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
         <maven-surefire-plugin.version>2.22.2</maven-surefire-plugin.version>
         <jacoco-maven-plugin.version>0.8.12</jacoco-maven-plugin.version>
