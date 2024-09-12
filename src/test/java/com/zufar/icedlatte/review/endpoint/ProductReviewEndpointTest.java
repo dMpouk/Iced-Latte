@@ -21,6 +21,7 @@ import java.util.UUID;
 import static com.zufar.icedlatte.test.config.RestAssertion.assertRestApiBadRequestResponse;
 import static com.zufar.icedlatte.test.config.RestAssertion.assertRestApiBodySchemaResponse;
 import static com.zufar.icedlatte.test.config.RestAssertion.assertRestApiNotFoundResponse;
+import static com.zufar.icedlatte.test.config.RestAssertion.assertRestApiOkResponse;
 import static com.zufar.icedlatte.test.config.RestUtils.getJwtToken;
 import static com.zufar.icedlatte.test.config.RestUtils.getRequestBody;
 import static io.restassured.RestAssured.given;
@@ -159,8 +160,8 @@ class ProductReviewEndpointTest {
 
 
     @Test
-    @DisplayName("Reviews and ratings with default pagination and sorting for unauthorized user. Should return 400 Bad Request")
-    void shouldReturnBadRequestForDefaultPaginationAndSortingForAnonymous() {
+    @DisplayName("Reviews and ratings with default pagination and sorting for unauthorized user. Should return 200 OK")
+    void shouldSuccessfullyReturnReviewsForDefaultPaginationAndSortingForAnonymous() {
         // No authorization is required
         specification = given()
                 .log().all(true)
@@ -172,7 +173,7 @@ class ProductReviewEndpointTest {
         Response response = given(specification)
                 .get("/{productId}/reviews", AMERICANO_ID);
 
-        assertRestApiBadRequestResponse(response, FAILED_REVIEW_SCHEMA);
+        assertRestApiOkResponse(response, REVIEWS_WITH_RATINGS_RESPONSE_SCHEMA);
     }
 
     @Test
