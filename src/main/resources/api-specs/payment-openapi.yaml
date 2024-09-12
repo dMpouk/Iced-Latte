@@ -19,26 +19,6 @@ tags:
     description: "An API for managing and retrieving payment information"
 
 paths:
-  /api/v1/payment:
-    post:
-      tags:
-        - "Payment"
-      summary: "Creates Stripe Session for an authorized user"
-      operationId: "processPayment"
-      responses:
-        "200":
-          description: "Session created successfully"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/SessionWithClientSecretDto"
-        "400":
-          description: "Cannot create session"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorHandler"
-
   /api/v1/payment/order:
     get:
       tags:
@@ -61,10 +41,22 @@ paths:
                 $ref: "#/components/schemas/PaymentConfirmationEmail"
         "400":
           description: "Cannot create order"
+
+  /:
+    get:
+      tags:
+        - "Payment"
+      summary: "Creates Stripe Session for an authorized user and returns its id and client secret"
+      operationId: "processPayment"
+      responses:
+        "200":
+          description: "Session created successfully"
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorHandler"
+                $ref: "#/components/schemas/SessionWithClientSecretDto"
+        "400":
+          description: "Cannot create session"
 
 components:
   schemas:
@@ -78,6 +70,9 @@ components:
 
     SessionWithClientSecretDto:
       type: "object"
+      required:
+        - sessionId
+        - clientSecret
       properties:
         sessionId:
           type: "string"
@@ -89,19 +84,3 @@ components:
       properties:
         customerEmail:
           type: "string"
-
-    ErrorHandler:
-      type: "object"
-      properties:
-        messages:
-          type: "array"
-          items:
-            format: "string"
-        description:
-          type: "string"
-        httpStatusCode:
-          type: "integer"
-          format: "int32"
-        timestamp:
-          type: "string"
-          format: "date-time"
