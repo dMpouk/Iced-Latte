@@ -1,8 +1,11 @@
 package com.zufar.icedlatte.review.endpoint;
 
+import com.zufar.icedlatte.product.util.PaginationAndSortingAttribute;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
+import java.util.HashMap;
+import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -10,6 +13,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.ActiveProfiles;
 import org.testcontainers.containers.PostgreSQLContainer;
@@ -281,5 +285,27 @@ class ProductReviewEndpointTest {
         responsePost.then().statusCode(HttpStatus.BAD_REQUEST.value());
         responseDelete.then().statusCode(HttpStatus.BAD_REQUEST.value());
         responseGetReview.then().statusCode(HttpStatus.BAD_REQUEST.value());
+    }
+
+    @Test
+    @DisplayName("Should not allow symbols like +,% in the size input. Return 400 Bad Request.")
+    void shouldReturnBadRequestForNonNumericCharactersInSizeInput() {
+        Map<String, Object> params = new HashMap<>();
+        params.put(PaginationAndSortingAttribute.PAGE, 0);
+        params.put(PaginationAndSortingAttribute.SIZE, "+");
+
+        // No authorization is required
+        specification = given()
+            .log().all(true)
+            .port(port)
+            .basePath(ProductReviewEndpoint.PRODUCT_REVIEW_URL)
+            .accept(ContentType.JSON);
+
+        Response response = given(specification)
+            .queryParams(params)
+            .get("/{productId}/reviews", AMERICANO_ID);
+
+        response.then()
+            .body("status", equalTo(400));
     }
 }

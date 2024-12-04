@@ -70,12 +70,14 @@ public class ProductReviewEndpoint implements com.zufar.icedlatte.openapi.produc
     @GetMapping(value = "/{productId}/reviews")
     public ResponseEntity<ProductReviewsAndRatingsWithPagination> getProductReviewsAndRatings(@PathVariable final UUID productId,
                                                                                               @RequestParam(name = "page", defaultValue = "0") final Integer pageNumber,
-                                                                                              @RequestParam(name = "size", defaultValue = "10") final Integer pageSize,
+                                                                                              @RequestParam(name = "size", required = false) final Integer pageSizeParam,
                                                                                               @RequestParam(name = "sort_attribute", defaultValue = "createdAt") final String sortAttribute,
                                                                                               @RequestParam(name = "sort_direction", defaultValue = "desc") final String sortDirection,
                                                                                               @RequestParam(name = "product_ratings", required = false) List<Integer> productRatings) {
         log.info("Received the request to get reviews and ratings for the product with the productId = '{}' and with the next pagination and sorting attributes: pageNumber - {}, pageSize - {}, sort_attribute - {}, sort_direction - {}, productRatings - {}",
-                productId, pageNumber, pageSize, sortAttribute, sortDirection, productRatings);
+                productId, pageNumber, pageSizeParam, sortAttribute, sortDirection, productRatings);
+        //TODO : extract the default value of 10 to property
+        Integer pageSize = pageSizeParam == null ? 10 : pageSizeParam;
         Pageable pageable = createPageableObject(pageNumber, pageSize, sortAttribute, sortDirection);
         getReviewsRequestValidator.validate(pageNumber, pageSize, sortAttribute, sortDirection, productRatings);
         ProductReviewsAndRatingsWithPagination reviewsPaginationDto = productReviewsProvider.getProductReviews(productId, pageable, productRatings);
