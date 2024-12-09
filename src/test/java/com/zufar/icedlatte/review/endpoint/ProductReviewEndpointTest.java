@@ -306,5 +306,6 @@ class ProductReviewEndpointTest {
 
         response.then()
             .body("status", equalTo(400));
+        response.then().body("error", equalTo("Invalid page size value"));
     }
 }
