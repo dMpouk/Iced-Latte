@@ -9,6 +9,8 @@ import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
@@ -286,12 +288,13 @@ class ProductReviewEndpointTest {
         responseGetReview.then().statusCode(HttpStatus.BAD_REQUEST.value());
     }
 
-    @Test
+    @ParameterizedTest
+    @ValueSource(strings = {"+", "%", "&", "%25"})
     @DisplayName("Should not allow symbols like +,% in the size input. Return 400 Bad Request.")
-    void shouldReturnBadRequestForNonNumericCharactersInSizeInput() {
+    void shouldReturnBadRequestForNonNumericCharactersInSizeInput(String sizeSymbol) {
         Map<String, Object> params = new HashMap<>();
         params.put(PaginationAndSortingAttribute.PAGE, 0);
-        params.put(PaginationAndSortingAttribute.SIZE, "+");
+        params.put(PaginationAndSortingAttribute.SIZE, sizeSymbol);
 
         // No authorization is required
         specification = given()
